@@ -2,11 +2,14 @@
 const { Sequelize } = require('sequelize');
 
 // Crear una instancia con los datos de tu conexión
-const sequelize = new Sequelize('octavio', 'root', '', 
+const sequelize = new Sequelize(
+    process.env.DB_NAME,      // Nombre de la base de datos
+    process.env.DB_USER,      // Usuario
+    process.env.DB_PASSWORD,  // Contraseña
 {
-    host: 'localhost',
+    host: process.env.DB_HOST,
     dialect: 'mysql',
-    port: 3307 // ¡Importante! Usa el puerto que configuraste
+    port: process.env.DB_PORT // Puerto de la base de datos
 });
 sequelize.authenticate()
     .then(() => {

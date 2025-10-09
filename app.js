@@ -1,4 +1,6 @@
 // 1. IMPORTACIONES
+require('dotenv').config(); // Carga las variables de entorno desde el archivo .env
+
 const sequelize = require('./basedatos');
 const app = require('./conexion'); // Importamos la app de Express
 
