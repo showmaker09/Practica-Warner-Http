@@ -1,0 +1,207 @@
+/* Archivo: public/css/styles.css */
+
+/* --- Variables de Color y Estilos Base --- */
+:root {
+  --color-primario: #007bff;
+  --color-secundario: #6c757d;
+  --color-exito: #28a745;
+  --color-peligro: #dc3545;
+  --color-aviso: #ffc107;
+  --color-fondo: #f8f9fa;
+  --color-superficie: #ffffff;
+  --color-texto: #212529;
+  --color-borde: #dee2e6;
+  --sombra-caja: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --radio-borde: 8px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.5;
+}
+
+/* --- Estructura Principal (Layout) --- */
+header {
+  background-color: #343a40;
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: var(--sombra-caja);
+}
+
+main {
+  display: flex;
+  padding: 1rem;
+}
+
+nav {
+  width: 220px;
+  background: var(--color-superficie);
+  padding: 1.5rem;
+  border-right: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-caja);
+  height: fit-content;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li a {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--color-secundario);
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+nav ul li a:hover {
+  background-color: #e9ecef;
+  color: var(--color-primario);
+}
+
+.content {
+  flex-grow: 1;
+  padding: 0 2rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  color: var(--color-secundario);
+  border-top: 1px solid var(--color-borde);
+}
+
+/* --- Componentes --- */
+
+/* Títulos */
+h2, h3 {
+  color: #495057;
+  border-bottom: 2px solid var(--color-borde);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+/* Formularios y Filtros */
+.form-container, .filters {
+  background: var(--color-superficie);
+  padding: 1.5rem;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-caja);
+  margin-bottom: 2rem;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Botones */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: var(--color-primario);
+  color: white;
+}
+.btn-primary:hover { background-color: #0056b3; }
+
+.btn-edit {
+  background-color: var(--color-aviso);
+  color: var(--color-texto);
+  margin-right: 0.5rem;
+}
+.btn-edit:hover { background-color: #d39e00; }
+
+.btn-delete {
+  background-color: var(--color-peligro);
+  color: white;
+}
+.btn-delete:hover { background-color: #c82333; }
+
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-superficie);
+  box-shadow: var(--sombra-caja);
+  border-radius: var(--radio-borde);
+  overflow: hidden; /* Para que el border-radius afecte a la tabla */
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+thead th {
+  background-color: #e9ecef;
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tbody tr:hover {
+  background-color: #e2e6ea;
+}
+
+
+/* --- Diseño Responsivo --- */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+  nav {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-right: none;
+    border-bottom: 1px solid var(--color-borde);
+  }
+  .content {
+    padding: 0;
+  }
+  form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
