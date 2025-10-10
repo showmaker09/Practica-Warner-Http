@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 
 // Importar rutas
 import juegoRoutes from './src/routes/juegoRoutes.js';
-
+import usuarioRoutes from './src/routes/usuarioRoutes.js';
 // --- Configuración Inicial ---
 dotenv.config();
 const app = express();
@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 
 // Usar las rutas para la gestión de juegos bajo el prefijo /admin/juegos
 app.use('/admin/juegos', juegoRoutes);
+app.use('/admin/usuarios', usuarioRoutes); // Rutas para usuarios
 
 // --- Iniciar Servidor ---
 app.listen(PORT, () => {

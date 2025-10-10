@@ -187,7 +187,8 @@ tbody tr:hover {
 
 
 /* --- Diseño Responsivo --- */
-@media (max-width: 768px) {
+@media (max-width: 768px) 
+{
   main {
     flex-direction: column;
   }
@@ -204,4 +205,24 @@ tbody tr:hover {
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+
+/* Archivo: public/css/styles.css (añadir al final) */
+
+/* --- Estilos adicionales para el formulario de búsqueda --- */
+
+.filters form 
+{
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-secondary {
+  background-color: var(--color-secundario);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
 }

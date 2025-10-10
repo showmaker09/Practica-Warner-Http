@@ -1,5 +1,9 @@
-<%- include('partials/header') %> <main>
-  <%- include('partials/menu') %> <section class="content">
+<%- include('partials/header') %> 
+
+<main>
+  <%- include('partials/menu') %> 
+
+  <section class="content">
     <h2>Gestión de Juegos</h2>
 
     <div class="form-container">
@@ -13,10 +17,13 @@
     </div>
 
     <div class="filters">
-        <input type="text" id="search" placeholder="Buscar por nombre...">
+      <form id="search-form">
+        <input type="text" id="search-input" placeholder="Buscar por nombre...">
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+      </form>
     </div>
 
-    <table>
+    <table id="juegos-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -49,3 +56,5 @@
     </table>
   </section>
 </main>
+
+<%- include('partials/footer') %>
