@@ -20,7 +20,7 @@
         <input type="text" id="search" placeholder="Buscar por nombre o correo...">
     </div>
 
-    <table>
+    <table id="admin-usuarios-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -38,10 +38,16 @@
               <td><%= usuario.Nombre %></td>
               <td><%= usuario.CorreoElectronico %></td>
               <td><%= usuario.Edad %></td>
+              
               <td>
-                <button class="btn btn-edit">Modificar</button>
-                <button class="btn btn-delete">Baja</button>
-              </td>
+               <button class="btn btn-edit" data-id="<%= usuario.IDUsuario %>">Modificar</button>
+               <button class="btn btn-delete" data-id="<%= usuario.IDUsuario %>">Baja</button>
+             </td>
+
+               
+
+                 
+             
             </tr>
           <% }); %>
         <% } else { %>
@@ -54,4 +60,30 @@
   </section>
 </main>
 
+
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Modificar Usuario</h2>
+        <form id="edit-form">
+            <input type="hidden" id="edit-id">
+            <div class="form-group">
+                <label for="edit-nombre">Nombre:</label>
+                <input type="text" id="edit-nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-correo">Correo Electrónico:</label>
+                <input type="email" id="edit-correo" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-edad">Edad:</label>
+                <input type="number" id="edit-edad" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
 <%- include('partials/footer') %>
+
+

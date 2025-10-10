@@ -28,6 +28,6 @@ export const updateJuego = async (id, nombre, modo, tipo) => {
 
 // Eliminar un juego
 export const deleteJuego = async (id) => {
-    const [result] = await pool.query('DELETE FROM Juego WHERE IDJuego = ?', [id]);
+    const [result] = await pool.query('DELETE FROM Juego WHERE IDJuego = ?', [id]); // revisar si hay error aqui
     return result.affectedRows > 0;
 };
