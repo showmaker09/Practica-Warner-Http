@@ -1,5 +1,7 @@
 const { User } = require('../models/UserModel')
 const { Profile } = require('../models/ProfileModel')
+const { validationResult } = require('express-validator');
+
 
 const relations = 
 [
@@ -53,19 +55,37 @@ const getById = (request, response) => {
         })
 }
 
-const create = (request, response) => {
+const create = async (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(422).json({ errors: errors.mapped() });
+    }
 
-    User.create(request.body).then(
-        newEntitie => {
-            response.status(201).json(newEntitie)
-        }
-    )
-        .catch(err => {
-            response.status(500).send('Error al crear');
-        })
+    try {
+        // 1. Mapeamos el campo 'password' de la petición a 'contraseña' para el modelo.
+        const { password, email, ...restOfBody } = request.body;
+        const newUser = await User.create({
+            ...restOfBody,
+            contraseña: password,
+            correo: email
+        });
+
+        // 2. Respondemos con el usuario creado, pero sin incluir la contraseña.
+        // También excluimos el correo para ser consistentes, aunque no es un dato sensible como la contraseña.
+        const { contraseña, correo, ...userWithoutPassword } = newUser.get({ plain: true });
+        response.status(201).json(userWithoutPassword);
+    } catch (err) {
+        console.error(err);
+        response.status(500).json({ message: 'Error al crear el usuario.', error: err.message });
+    }
 }
 
 const update = (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(422).json({ errors: errors.mapped() });
+    }
+
     const id = request.params.id;
     User.update(
         request.body

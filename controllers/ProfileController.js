@@ -1,4 +1,5 @@
 const { Profile } = require('../models/ProfileModel')
+const { validationResult } = require('express-validator');
 
 
 const get = (request, response) => {
@@ -38,19 +39,28 @@ const getById = (request, response) => {
     })
 }
 
-const create = (request, response) => {
 
-  Profile.create(request.body).then(
-    newEntitie => {
-      response.status(201).json(newEntitie)
-    }
-  )
-    .catch(err => {
-      response.status(500).send('Error al crear');
-    })
-}
+const create = async (request, response) => {
+  const errors = validationResult(request);
+  if (!errors.isEmpty()) {
+    return response.status(422).json({ errors: errors.mapped() });
+  }
+
+  try {
+    const newEntitie = await Profile.create(request.body);
+    response.status(201).json(newEntitie);
+  } catch (err) {
+    console.log(err);
+    response.status(500).send('Error al crear');
+  }
+};
 
 const update = (request, response) => {
+  const errors = validationResult(request);
+  if (!errors.isEmpty()) {
+    return response.status(422).json({ errors: errors.mapped() });
+  }
+
   const id = request.params.id;
   Profile.update(
     request.body
@@ -84,7 +94,8 @@ const destroy = (request, response) => {
     });
 }
 
-module.exports = {
+module.exports = 
+{
   get,
   getById,
   create,
