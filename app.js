@@ -18,6 +18,8 @@ const category_routes = require('./routes/categoryRoutes');
 const new_routes = require('./routes/newRoutes');
 const state_routes = require('./routes/stateRoutes');
 const user_routes = require('./routes/userRoutes');
+const auth_routes = require('./routes/AuthRoute')
+
 
 
 // Usar las rutas de la API
@@ -26,6 +28,7 @@ app.use('/api', category_routes);
 app.use('/api', new_routes);
 app.use('/api', state_routes);
 app.use('/api', user_routes);
+app.use('/api', auth_routes);
 
 // Ruta para la documentación de Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
