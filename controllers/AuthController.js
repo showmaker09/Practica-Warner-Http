@@ -36,7 +36,7 @@ const register = (request, response) => {
     if (!errors.isEmpty()) {
         return response.status(422).json({ errors: errors.mapped() });
     }
-    request.body.perfil_id = 3
+    request.body.perfil_id = 5
     request.body.activo = true
 
     User.create(request.body).then(

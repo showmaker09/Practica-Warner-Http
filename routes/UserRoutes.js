@@ -99,6 +99,8 @@ api.get('/usuarios/:id', getById)
  *   post:
  *     summary: Crea un nuevo usuario
  *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -113,7 +115,29 @@ api.get('/usuarios/:id', getById)
  */
 api.post('/usuarios', authenticateAdmin, userValidationRules, create)
 
+/**
+ * @swagger
+ * /api/usuarios/{id}:
+ *   put:
+ *     summary: Actualiza un usuario existente
+ *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del usuario a actualizar
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado exitosamente.
+ *       404:
+ *         description: El usuario no fue encontrado.
+ */
 api.put('/usuarios/:id', authenticateAdmin, userValidationRules, update)
+
 api.delete('/usuarios/:id', authenticateAdmin, destroy)
 
 

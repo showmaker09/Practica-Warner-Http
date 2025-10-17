@@ -82,6 +82,8 @@ api.get('/perfiles/:id', getById)
  *   post:
  *     summary: Crea un nuevo perfil
  *     tags: [Perfiles]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -96,7 +98,29 @@ api.get('/perfiles/:id', getById)
  */
 api.post('/perfiles', authenticateAdmin ,profileValidationRules, create)
 
+/**
+ * @swagger
+ * /api/perfiles/{id}:
+ *   put:
+ *     summary: Actualiza un perfil existente
+ *     tags: [Perfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del perfil a actualizar
+ *     responses:
+ *       200:
+ *         description: Perfil actualizado exitosamente.
+ *       404:
+ *         description: El perfil no fue encontrado.
+ */
 api.put('/perfiles/:id',authenticateAdmin , profileValidationRules, update)
+
 api.delete('/perfiles/:id',authenticateAdmin , destroy)
 
 

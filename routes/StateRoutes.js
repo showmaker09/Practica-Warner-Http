@@ -97,6 +97,8 @@ api.get('/estados/:id', getById);
  *   post:
  *     summary: Crea un nuevo estado
  *     tags: [Estados]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -118,7 +120,29 @@ api.get('/estados/:id', getById);
 api.post('/estados',  authenticateAdmin,validatorStateRequire, validatorStateOptional, stateValidationRules,create);
 
 // La documentación para PUT y DELETE seguiría un patrón similar...
+/**
+ * @swagger
+ * /api/estados/{id}:
+ *   put:
+ *     summary: Actualiza un estado existente
+ *     tags: [Estados]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del estado a actualizar
+ *     responses:
+ *       200:
+ *         description: Estado actualizado exitosamente.
+ *       404:
+ *         description: El estado no fue encontrado.
+ */
 api.put('/estados/:id', authenticateAdmin, validatorStateRequire, validatorStateOptional,stateValidationRules,update);
+
 api.delete('/estados/:id', authenticateAdmin, destroy);
 
 module.exports = api;

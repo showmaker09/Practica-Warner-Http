@@ -6,6 +6,15 @@ var express = require('express');
  *   description: Endpoints para registro e inicio de sesión de usuarios.
  *
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *       description: "Introduce el token JWT con el prefijo 'Bearer '. Ejemplo: 'Bearer eyJhbGciOiJIUzI1Ni...'"
+ *   security:
+ *     - bearerAuth: []
+ *
  *   schemas:
  *     LoginCredentials:
  *       type: object

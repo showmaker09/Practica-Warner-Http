@@ -134,6 +134,8 @@ api.get('/nuevas/:id', getById);
  *   post:
  *     summary: Crea una nueva noticia
  *     tags: [Noticias]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -158,6 +160,8 @@ api.post('/nuevas',  authenticateAny,validatorNewCreate,create);
  *   put:
  *     summary: Actualiza una noticia existente
  *     tags: [Noticias]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -187,6 +191,8 @@ api.put('/nuevas/:id', authenticateAny,validatorNewUpdate, update);
  *   delete:
  *     summary: Elimina una noticia por su ID
  *     tags: [Noticias]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

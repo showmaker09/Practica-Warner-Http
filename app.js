@@ -15,7 +15,6 @@ const swaggerSpecs = require('./swaggerConfig');
 app.use(express.json());
 app.use(cors());
 
-
 //Exportar Rutas si ves que estan en rojo espera un momento a que se guarden los cambios
 const profile_routes = require('./routes/profileRoutes');
 const category_routes = require('./routes/categoryRoutes');
