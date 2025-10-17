@@ -1,6 +1,7 @@
 var express = require('express');
 const { body } = require('express-validator');
 const { validatorStateRequire, validatorStateOptional } = require('../validators/StateValidator');
+const { authenticateAdmin } = require('../middlewares/jwt')
 
 const {get, getById, create, update, destroy}  = require('../controllers/StateController');
 const api = express.Router();
@@ -114,10 +115,10 @@ api.get('/estados/:id', getById);
  *       500:
  *         description: Error en el servidor
  */
-api.post('/estados', validatorStateRequire, validatorStateOptional, stateValidationRules,create);
+api.post('/estados',  authenticateAdmin,validatorStateRequire, validatorStateOptional, stateValidationRules,create);
 
 // La documentación para PUT y DELETE seguiría un patrón similar...
-api.put('/estados/:id', validatorStateRequire, validatorStateOptional,stateValidationRules,update);
-api.delete('/estados/:id', destroy);
+api.put('/estados/:id', authenticateAdmin, validatorStateRequire, validatorStateOptional,stateValidationRules,update);
+api.delete('/estados/:id', authenticateAdmin, destroy);
 
 module.exports = api;

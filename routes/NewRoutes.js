@@ -2,6 +2,8 @@ var express = require('express');
 
 const {get, getById, create, update, destroy}  = require('../controllers/NewController');
 const {validatorNewCreate, validatorNewUpdate} = require('../validators/NewValidator');
+const { authenticateAdmin, authenticateAny } = require('../middlewares/jwt')
+
 const api = express.Router();
 
 /**
@@ -148,7 +150,7 @@ api.get('/nuevas/:id', getById);
  *       422:
  *         description: Error de validación en los datos de entrada
  */
-api.post('/nuevas', validatorNewCreate,create);
+api.post('/nuevas',  authenticateAny,validatorNewCreate,create);
 
 /**
  * @swagger
@@ -177,7 +179,7 @@ api.post('/nuevas', validatorNewCreate,create);
  *       422:
  *         description: Error de validación.
  */
-api.put('/nuevas/:id',validatorNewUpdate, update);
+api.put('/nuevas/:id', authenticateAny,validatorNewUpdate, update);
 
 /**
  * @swagger
@@ -198,6 +200,6 @@ api.put('/nuevas/:id',validatorNewUpdate, update);
  *       404:
  *         description: La noticia no fue encontrada.
  */
-api.delete('/nuevas/:id', destroy);
+api.delete('/nuevas/:id',  authenticateAny,destroy);
 
 module.exports = api;
