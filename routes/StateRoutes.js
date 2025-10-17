@@ -1,5 +1,6 @@
 var express = require('express');
 const { body } = require('express-validator');
+const { validatorStateRequire, validatorStateOptional } = require('../validators/StateValidator');
 
 const {get, getById, create, update, destroy}  = require('../controllers/StateController');
 const api = express.Router();
@@ -31,7 +32,8 @@ const api = express.Router();
  */
 
 // Reglas de validación para crear y actualizar un Estado
-const stateValidationRules = [
+const stateValidationRules = 
+[
   // El nombre no debe estar vacío
   body('nombre').notEmpty().withMessage('El campo nombre es obligatorio.'),
   // La abreviación debe tener exactamente 2 caracteres
@@ -112,10 +114,10 @@ api.get('/estados/:id', getById);
  *       500:
  *         description: Error en el servidor
  */
-api.post('/estados', stateValidationRules, create);
+api.post('/estados', validatorStateRequire, validatorStateOptional, stateValidationRules,create);
 
 // La documentación para PUT y DELETE seguiría un patrón similar...
-api.put('/estados/:id', stateValidationRules, update);
+api.put('/estados/:id', validatorStateRequire, validatorStateOptional,stateValidationRules,update);
 api.delete('/estados/:id', destroy);
 
 module.exports = api;

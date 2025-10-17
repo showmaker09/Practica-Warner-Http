@@ -12,7 +12,7 @@ const swaggerSpecs = require('./swaggerConfig');
 // Middlewares
 app.use(express.json());
 
-//Exportar Rutas
+//Exportar Rutas si ves que estan en rojo espera un momento a que se guarden los cambios
 const profile_routes = require('./routes/profileRoutes');
 const category_routes = require('./routes/categoryRoutes');
 const new_routes = require('./routes/newRoutes');
