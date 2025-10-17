@@ -2,6 +2,8 @@ var express = require('express');
 const { body } = require('express-validator');
 
 const { get, getById, create, update, destroy } = require('../controllers/UserController');
+const { authenticateAdmin } = require('../middlewares/jwt')
+
 const api = express.Router();
 
 /**
@@ -109,10 +111,10 @@ api.get('/usuarios/:id', getById)
  *       422:
  *         description: Error de validación.
  */
-api.post('/usuarios', userValidationRules, create)
+api.post('/usuarios', authenticateAdmin, userValidationRules, create)
 
-api.put('/usuarios/:id', userValidationRules, update)
-api.delete('/usuarios/:id', destroy)
+api.put('/usuarios/:id', authenticateAdmin, userValidationRules, update)
+api.delete('/usuarios/:id', authenticateAdmin, destroy)
 
 
 module.exports = api;
