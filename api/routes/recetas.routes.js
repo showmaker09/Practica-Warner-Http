@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getRecetasService, createRecetaService } from '../services/recetas.service.js';
+import { getRecetasService, createRecetaService,getRecetaByIdService,updateRecetaService } from '../services/recetas.service.js';
 
 const router = Router();
 
@@ -22,5 +22,10 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Error al crear la receta' });
   }
 });
+
+router.put('/:id', updateRecetaService);
+
+
+
 
 export default router;
