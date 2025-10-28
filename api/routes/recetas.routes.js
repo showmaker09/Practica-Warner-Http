@@ -1,0 +1,26 @@
+import { Router } from 'express';
+import { getRecetasService, createRecetaService } from '../services/recetas.service.js';
+
+const router = Router();
+
+// Ruta para obtener todas las recetas
+router.get('/', async (req, res) => {
+  try {
+    const recetas = await getRecetasService();
+    res.json(recetas);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las recetas' });
+  }
+});
+
+// Ruta para crear una nueva receta
+router.post('/', async (req, res) => {
+  try {
+    const newReceta = await createRecetaService(req.body);
+    res.status(201).json(newReceta);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al crear la receta' });
+  }
+});
+
+export default router;
