@@ -19,7 +19,7 @@
         form button { background-color: #28a745; }
         form button:hover { background-color: #218838; }
         hr { margin: 2em 0; }
-        #receta-detalle-container { margin-top: 1em; }
+        #receta-detalle-container, #usuario-detalle-container { margin-top: 1em; }
     </style>
 </head>
 <body>
@@ -65,6 +65,15 @@
     <h2>Usuarios</h2>
     <button id="cargar-usuarios">Cargar Usuarios</button>
     <div id="usuarios-container"></div>
+
+    <hr>
+
+    <h2>Buscar Usuario por ID</h2>
+    <form id="form-buscar-usuario">
+        <input type="number" id="buscar-usuario-id" placeholder="Introduce el ID del usuario" required>
+        <button type="submit">Buscar</button>
+    </form>
+    <div id="usuario-detalle-container"></div>
 
     <h2>Crear Nuevo Usuario</h2>
     <form id="form-crear-usuario">
@@ -195,6 +204,8 @@
         const cargarUsuariosBtn = document.getElementById('cargar-usuarios');
         const usuariosContainer = document.getElementById('usuarios-container');
         const formCrearUsuario = document.getElementById('form-crear-usuario');
+        const formBuscarUsuario = document.getElementById('form-buscar-usuario');
+        const usuarioDetalleContainer = document.getElementById('usuario-detalle-container');
 
         const fetchAndDisplayUsuarios = () => {
             fetch(`${API_BASE_URL}/usuarios`)
@@ -235,6 +246,29 @@
                 fetchAndDisplayUsuarios();
             })
             .catch(error => console.error('Error creando usuario:', error));
+        });
+
+        formBuscarUsuario.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscar-usuario-id').value;
+            usuarioDetalleContainer.innerHTML = '';
+
+            fetch(`${API_BASE_URL}/usuarios/${id}`)
+                .then(response => {
+                    if (response.status === 404) return Promise.reject('Usuario no encontrado');
+                    return response.ok ? response.json() : Promise.reject('Error en la búsqueda');
+                })
+                .then(usuario => {
+                    usuarioDetalleContainer.innerHTML = `
+                        <div class="item">
+                            <h4>${usuario.nombre} (ID: ${usuario.id_usuario})</h4>
+                            <p><strong>IDs de Recetas Asociadas:</strong> ${usuario.recetas.join(', ') || 'Ninguna'}</p>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    usuarioDetalleContainer.innerHTML = `<p>${error}</p>`;
+                });
         });
 
     </script>

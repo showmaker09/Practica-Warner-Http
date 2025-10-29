@@ -22,33 +22,25 @@ export const createRecetaService = async (newReceta) => {
 };
 
 // por ID
-export const getRecetaByIdService = async (req, res) => {
-  try {
-    const { id } = req.params; // Obtiene el ID de la URL
+export const getRecetaByIdService = async (id) => {
+  // 1. Busca la receta, los ingredientes y los pasos al mismo tiempo
+  const [receta, ingredientes, pasos] = await Promise.all([
+    findRecetaById(id),
+    findIngredientesByRecetaId(id),
+    findPasosByRecetaId(id)
+  ]);
 
-    // 1. Busca la receta, los ingredientes y los pasos al mismo tiempo
-    const [receta, ingredientes, pasos] = await Promise.all([
-      findRecetaById(id),
-      findIngredientesByRecetaId(id),
-      findPasosByRecetaId(id)
-    ]);
-
-    // 2. Verifica si la receta existe
-    if (!receta) {
-      return res.status(404).json({ message: 'Receta no encontrada' });
-    }
-
-    // 3. Combina todo en un solo objeto
-    const recetaCompleta = {
-      ...receta,
-      ingredientes: ingredientes,
-      pasos: pasos
-    };
-
-    res.json(recetaCompleta);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  // 2. Verifica si la receta existe
+  if (!receta) {
+    return null; // Devuelve null si no se encuentra
   }
+
+  // 3. Combina todo en un solo objeto y lo devuelve
+  return {
+    ...receta,
+    ingredientes: ingredientes,
+    pasos: pasos
+  };
 };
 
 

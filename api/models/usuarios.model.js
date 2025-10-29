@@ -33,3 +33,17 @@ export const findAllUsuariosWithRecipeCount = async () =>
   `);
   return rows;
 };
+
+// --- NUEVAS FUNCIONES ---
+
+// Buscar un usuario por ID
+export const findUsuarioById = async (id) => {
+  const [rows] = await pool.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
+  return rows[0]; // Devuelve el primer resultado o undefined
+};
+
+// Buscar todas las recetas (solo IDs) de un usuario
+export const findRecetasByUsuarioId = async (id) => {
+  const [rows] = await pool.query('SELECT id_receta FROM recetas WHERE id_usuario = ?', [id]);
+  return rows; // Devuelve un array de objetos ej: [{id_receta: 1}, {id_receta: 2}]
+};

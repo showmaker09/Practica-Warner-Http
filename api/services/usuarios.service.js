@@ -1,6 +1,8 @@
 import {
   createUsuarioModel,
-  findAllUsuariosWithRecipeCount
+  findAllUsuariosWithRecipeCount,
+  findUsuarioById,
+  findRecetasByUsuarioId
 } from '../models/usuarios.model.js';
 
 // se exportan las funciones 
@@ -31,6 +33,31 @@ export const getAllUsuariosService = async (req, res) => {
   try {
     const usuarios = await findAllUsuariosWithRecipeCount();
     res.json(usuarios);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// --- NUEVO SERVICIO GET (Buscar Usuario por ID) ---
+export const getUsuarioByIdService = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [usuario, recetas] = await Promise.all([
+      findUsuarioById(id),
+      findRecetasByUsuarioId(id)
+    ]);
+
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Combina la información y la devuelve
+    res.json({
+      ...usuario,
+      recetas: recetas.map(r => r.id_receta) // Mapea para devolver solo un array de IDs
+    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
