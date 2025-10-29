@@ -16,16 +16,6 @@ export const createRecetaModel = async (newReceta) => {
   return result.insertId;
 };
 
-// (Asegúrate de importar 'pool' como lo tienes en tu captura)
-import { pool } from '../config/db.js';
-
-// --- FUNCIÓN PARA GET (Obtener todas las recetas) ---
-// (Esta es la que ya tienes)
-export const findAllRecetas = async () => {
-  const [rows] = await pool.query('SELECT * FROM recetas');
-  return rows;
-};
-
 // --- NUEVAS FUNCIONES PARA GET por ID (Usando 'pool') ---
 
 // 1. Busca la receta principal

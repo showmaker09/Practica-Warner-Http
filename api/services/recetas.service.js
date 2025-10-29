@@ -60,6 +60,9 @@ export const updateRecetaService = async (req, res) => {
 
     // --- Lógica de Permiso (¡IMPORTANTE!) ---
     // En una app real, el ID del usuario vendría de un token (login)
+
+
+      //IMPORTANTE!!!!!!
     // Por ahora, simularemos que el usuario "Ana" (ID 1) está logueado.
     const id_usuario_autenticado = 1; 
 
