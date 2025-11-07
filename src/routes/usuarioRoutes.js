@@ -1,7 +1,7 @@
 // Archivo: src/routes/usuarioRoutes.js
 
 import { Router } from 'express';
-import { mostrarAdminUsuarios,eliminarUsuario, actualizarUsuario} from '../controllers/usuarioController.js';
+import { mostrarAdminUsuarios,eliminarUsuario, actualizarUsuario, registerUsuario} from '../controllers/usuarioController.js';
 
 const router = Router();
 
@@ -9,6 +9,7 @@ const router = Router();
 router.get('/', mostrarAdminUsuarios);
 router.delete( '/:id', eliminarUsuario );
 router.put( '/:id',  actualizarUsuario );
+router.post('/register', registerUsuario);
 
 // --- Aquí irían las rutas para POST (crear), etc. ---
 

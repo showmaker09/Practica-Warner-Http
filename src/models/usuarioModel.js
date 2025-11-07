@@ -9,6 +9,13 @@ export const getAllUsuarios = async () =>
   return rows;
 };
 
+// Encontrar un usuario por su correo electrónico
+export const findByEmail = async (email) => {
+  const [rows] = await pool.query('SELECT * FROM Usuario WHERE CorreoElectronico = ?', [email]);
+  // Devuelve el primer usuario encontrado o undefined si no hay coincidencias.
+  return rows[0];
+};
+
 // --- Aquí podrías agregar las funciones para crear, actualizar y eliminar usuarios en el futuro ---
 // export const createUsuario = async (nombre, correo, edad) => { ... };
 
@@ -33,4 +40,17 @@ export const updateById = async (id, nombre, correo, edad) =>
         [nombre, correo, edad, id]
     );
     return result.affectedRows > 0;
+};
+
+
+
+// Crear un nuevo usuario de la base de datos de flor 
+export const createUsuario = async (username, email, passwordHash, edad) => { // <-- CAMBIO AQUÍ
+  
+  // Usamos la columna 'Edad', tal como existe en tu tabla
+  const [result] = await pool.query(
+    'INSERT INTO Usuario (Nombre, CorreoElectronico, password_hash, Edad) VALUES (?, ?, ?, ?)', // <-- CAMBIO AQUÍ
+    [username, email, passwordHash, edad] // <-- CAMBIO AQUÍ
+  );
+  return result.insertId;
 };

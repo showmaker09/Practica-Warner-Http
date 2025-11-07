@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayMatch - Tu Arena de Competición</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            /* Colores Base */
+            --color-dark: #121212;
+            --color-accent: #00ffc8; /* Verde neón */
+            --color-text: #e0e0e0;
+            --color-highlight: #2c2c2c;
+            --font-primary: 'Oxanium', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+            /* Colores de pago */
+            --color-mercadopago: #009ee3;
+            --color-oxxo: #e11e24;
+            --color-transferencia: #4a90e2;
+            --color-paypal: #00457C;
+        }
+
+        /* Estilos Globales */
+        html {
+            scroll-behavior: smooth; 
+        }
+        body {
+            background-color: var(--color-dark);
+            color: var(--color-text);
+            font-family: var(--font-primary);
+            margin: 0;
+            padding-top: 80px; 
+            min-height: 100vh;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            color: white;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(0, 255, 200, 0.2);
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: white;
+        }
+
+        /* 1. HEADER (Encabezado Fijo) - Diseño Geométrico */
+        #main-header {
+            background-color: #1a1a1a;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 15px 40px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Contenedor del logo y perfil (izquierda) - ESPACIADO CORREGIDO */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px; 
+            min-width: 280px;
+            justify-content: flex-start;
+        }
+        .logo {
+            margin-left: 0; 
+        }
+        .logo h1 {
+            font-size: 28px;
+            margin: 0;
+            color: var(--color-accent);
+            border-right: 3px solid var(--color-accent);
+            padding-right: 10px;
+            line-height: 1; 
+        }
+        
+        /* --- MÓDULO DE PERFIL (CONTENEDOR Y ICONO) --- */
+        #profile-module {
+            z-index: 100;
+            display: flex;
+            position: relative; /* CLAVE: Ancla el dropdown */
+        }
+        /* ICONO DE PERFIL RE-ESTILIZADO */
+        #profile-icon {
+            width: 45px; 
+            height: 45px;
+            background-color: var(--color-highlight);
+            border-radius: 4px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.3em; 
+            color: white;
+            border: 2px solid var(--color-accent);
+            box-shadow: 0 0 8px var(--color-accent);
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s, background-color 0.2s;
+            clip-path: polygon(0 0, 100% 10%, 100% 100%, 0% 90%);
+        }
+        #profile-icon:hover {
+            background-color: rgba(0, 255, 200, 0.1); 
+            box-shadow: 0 0 15px var(--color-accent);
+        }
+        
+        /* Menú Desplegable (CORRECCIÓN POSICIÓN: CENTRADO) */
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            
+            /* MODIFICACIONES CLAVE PARA CENTRAR */
+            left: 50%; 
+            right: auto; 
+            transform: translateX(-50%); 
+            
+            min-width: 200px;
+            background-color: #1a1a1a;
+            border: 1px solid var(--color-accent);
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            padding: 10px 0;
+            text-align: left; 
+        }
+        .profile-dropdown.active {
+             display: block;
+        }
+        /* Item del dropdown */
+        .profile-dropdown a {
+            display: block;
+            padding: 8px 15px;
+            color: var(--color-text);
+            font-size: 0.95em;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .profile-dropdown a:hover {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            text-shadow: none;
+        }
+
+        /* Separador */
+        .profile-dropdown-separator {
+            height: 1px;
+            background-color: var(--color-highlight);
+            margin: 5px 0;
+        }
+        /* HOVER DEL MÓDULO DE PERFIL */
+        #profile-module:hover .profile-dropdown {
+            display: block;
+        }
+
+
+        /* Navegación Principal (Header) */
+        #main-nav {
+            flex-grow: 1; 
+            display: flex;
+            justify-content: center;
+        }
+        #main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        #main-nav li {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        #main-nav a {
+            display: block;
+            padding: 10px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--color-text);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        #main-nav a:hover {
+            color: white;
+            text-shadow: 0 0 8px var(--color-accent);
+        }
+        
+        /* Submenú: OCULTO POR DEFECTO Y SE MUESTRA EN HOVER */
+        .submenu {
+            display: none !important; 
+            position: absolute;
+            top: 100%;
+            left: 50%; 
+            transform: translateX(-50%);
+            background-color: #222;
+            min-width: 180px;
+            padding: 5px 0;
+            border: 1px solid var(--color-accent);
+            z-index: 10;
+            list-style: none;
+            margin: 0;
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Mostrar el submenú al pasar el ratón */
+        #main-nav .nav-item:hover .submenu {
+            display: block !important; 
+        }
+
+
+        /* Botones de Autenticación - Estilo Geométrico */
+        .auth-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            min-width: 250px; 
+        }
+        .auth-actions a {
+            padding: 10px 15px; 
+            border: 2px solid;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+            line-height: 1; 
+            white-space: nowrap; 
+            transition: all 0.3s;
+            /* Forma geométrica en los botones */
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+        
+        /* INICIAR SESIÓN / REGISTRARSE */
+        #login-btn { border-color: var(--color-accent); color: var(--color-accent); background-color: transparent;}
+        #login-btn:hover { background-color: var(--color-accent); color: var(--color-dark); box-shadow: 0 0 10px var(--color-accent); }
+        #register-btn { background-color: var(--color-accent); color: var(--color-dark); border-color: var(--color-accent); }
+        #register-btn:hover { background-color: white; border-color: white; transform: scale(1.05); box-shadow: 0 0 15px white; }
+
+        /* --- Estilos Generales de Contenido --- */
+        main {
+            padding: 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .page-title-header {
+            text-align: center;
+            padding: 40px 0 20px;
+            border-bottom: 2px solid var(--color-highlight);
+            margin-bottom: 40px;
+        }
+        .page-title-header h2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px; 
+            font-size: 2.5em; 
+        }
+        .page-title-header h2 span {
+            font-size: 0.8em; 
+            line-height: 1;
+        }
+        .page-title-header p {
+            color: #aaa;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .accent-text {
+            color: var(--color-accent);
+            text-transform: uppercase;
+        }
+        
+        /* HERO - Caja Neón */
+        .hero-section {
+            padding: 80px 20px; 
+            background: linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.85)), url('https://via.placeholder.com/1300x400/1e1e1e/888888?text=Fondo+Abstracto+Gaming+Aqui');
+            /* Borde neón */
+            border: 3px solid var(--color-accent);
+            border-radius: 8px; /* Ligeramente redondeado */
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px var(--color-accent), inset 0 0 5px rgba(255, 255, 255, 0.5);
+            /* Centrar contenido */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .hero-section h2 {
+            font-size: 3.8em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px var(--color-accent);
+        }
+        .hero-section p {
+            font-size: 1.2em;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+        .btn-cta {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            /* Diseño geométrico */
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            font-family: var(--font-display);
+        }
+
+        /* Secciones de Juegos Destacados y Selección de Juego */
+        .featured-games, .selection-panel {
+            margin-top: 40px;
+        }
+        .game-cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        /* Estilo de Tarjetas de Juegos - Bloques con Borde */
+        .game-card {
+            background-color: #1a1a1a;
+            border: 3px solid var(--color-highlight); /* Borde más grueso */
+            border-radius: 4px;
+            padding: 25px;
+            text-align: center;
+            width: 280px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
+            /* Forma geométrica */
+            clip-path: polygon(0 0, 100% 5%, 100% 100%, 5% 95%);
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-accent);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.5);
+        }
+        .game-card.hidden {
+            display: none;
+        }
+        .game-card .btn-small {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #333;
+            color: var(--color-accent);
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+            font-family: var(--font-display);
+        }
+
+        /* Selector de Modo (Solos/Equipos) - Botones Gigantes con Clip */
+        .mode-selection-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .mode-button {
+            background-color: #1a1a1a;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+            padding: 20px 40px;
+            font-family: var(--font-display);
+            font-size: 1.8em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 200, 0.3);
+            /* Diseño Geométrico */
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+        }
+        .mode-button:hover {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            box-shadow: 0 0 20px var(--color-accent);
+            transform: scale(1.03);
+        }
+        
+        /* --- ESTILOS DE LISTADO DE TORNEO (TARJETAS) --- */
+        .tournament-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%; 
+            box-sizing: border-box;
+        }
+        .tournament-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a1a1a;
+            padding: 20px 30px;
+            border: 2px solid var(--color-highlight);
+            /* Diseño Geométrico en el listado */
+            clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
+            transition: transform 0.3s ease-out, border-color 0.3s, box-shadow 0.3s;
+            border-radius: 4px;
+            flex-wrap: wrap; 
+        }
+        .tournament-card:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+            transform: translateY(-2px);
+        }
+        /* GRUPO DE NOMBRE/JUEGO: Le damos la mayor prioridad de espacio */
+        .tournament-card .info-group {
+            flex: 1 1 50%; 
+            min-width: 150px;
+            padding-right: 10px; 
+            box-sizing: border-box;
+        }
+
+        /* GRUPO DE DETALLES: Le damos espacio inicial reducido y lo hacemos flexible internamente */
+        .tournament-card .details-group {
+            flex: 1 1 200px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            align-items: flex-end; 
+            min-width: 180px; 
+            text-align: right;
+        }
+        .tournament-card .info-group h4 {
+            margin: 0;
+            font-size: 1.4em;
+            color: white;
+            font-family: var(--font-display);
+        }
+        .tournament-card .info-group p {
+            margin: 5px 0 0;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+        .tournament-card .details-group p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #aaa;
+            text-align: right;
+            width: 100%;
+        }
+        .tournament-card .details-group .highlight-info {
+            color: var(--color-accent); 
+            font-weight: bold;
+        }
+        .btn-view-details {
+            padding: 10px 20px;
+            background-color: #333;
+            color: var(--color-accent);
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-left: 20px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            /* Diseño Geométrico */
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+        
+        /* Filtros de Torneo */
+        .tournament-filters {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .filter-btn {
+            background-color: #2c2c2c;
+            color: var(--color-text);
+            border: 1px solid var(--color-highlight);
+            padding: 8px 15px; 
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-primary);
+        }
+        .filter-btn.active {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            border-color: var(--color-accent);
+            font-weight: bold;
+            box-shadow: 0 0 8px var(--color-accent);
+        }
+
+
+        /* --- ESTILOS DE DETALLES DEL TORNEO (FINAL) --- */
+        .tournament-detail-container { 
+            padding: 0 20px;
+        }
+        .tournament-header {
+            text-align: left;
+            padding-bottom: 10px;
+            border-bottom: none;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+        .tournament-header h2 {
+            font-size: 3em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+            text-align: left;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .summary-panel {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border: 3px solid var(--color-highlight); /* Borde más grueso */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            text-align: left;
+            border-radius: 8px;
+            /* Diseño Geométrico */
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+        }
+        .summary-panel h3 {
+            color: white;
+            margin-top: 0;
+            border-bottom: 1px dashed var(--color-highlight);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.5em; 
+            text-align: left;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        .summary-item .summary-value {
+            color: var(--color-accent);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        /* Botón de Inscripción dentro del summary-panel */
+        .btn-register-large {
+            display: block;
+            width: 90%; 
+            margin: 30px auto 0 auto; 
+            text-align: center;
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            padding: 15px 25px; 
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            font-family: var(--font-display);
+            /* Diseño Geométrico */
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); 
+        }
+
+        .details-panel {
+            background-color: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+        .details-panel h3 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--color-highlight);
+            padding-bottom: 8px;
+            color: white;
+            font-family: var(--font-display);
+        }
+        .details-panel ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        .details-panel ul li {
+            background-color: transparent;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-left: none;
+            border-radius: 0;
+            font-size: 1em;
+            line-height: 1.5;
+            color: var(--color-text);
+        }
+        .details-panel ul li strong {
+            color: var(--color-accent);
+        }
+        
+        /* --- ESTILOS DE PAGO/VOUCHER (REESTRUCTURADOS EN CSS ORIGINAL) --- */
+        .payment-info-box {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid var(--color-highlight);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            /* Diseño Geométrico */
+            clip-path: polygon(0 0, 100% 5%, 100% 100%, 5% 95%);
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+        }
+        .payment-options-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .payment-card {
+            background-color: #2c2c2c;
+            border: 1px solid var(--color-highlight);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 200px; 
+            flex-shrink: 0;
+            /* Diseño Geométrico en tarjetas de pago */
+            clip-path: polygon(0 10%, 100% 0, 100% 90%, 0% 100%);
+        }
+        .payment-card.active {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            border-color: var(--color-accent);
+            box-shadow: 0 0 18px var(--color-accent);
+            transform: scale(1.05);
+        }
+        
+        /* Estilos del Formulario de Voucher y Perfil */
+        #voucher-form-container, .profile-form-container {
+            background-color: #1a1a1a;
+            padding: 40px;
+            border-radius: 8px;
+            border: 2px solid var(--color-highlight);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            /* Diseño Geométrico */
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+            max-width: 700px; 
+            margin: 0 auto; 
+        }
+        
+        /* ESTILO PARA LA SECCIÓN TEAM SETUP */
+        #team-setup .profile-form-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .form-game-group {
+            margin-bottom: 20px;
+        }
+        .form-game-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-accent);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 0.9em;
+        }
+        .form-game-group input[type="text"], 
+        .form-game-group input[type="email"],
+        .form-game-group input[type="date"], 
+        #voucher-form-container input[type="text"] {
+             width: 100%; 
+             padding: 12px;
+             background-color: #2c2c2c;
+             border: 1px solid var(--color-highlight);
+             color: var(--color-text);
+             border-radius: 4px;
+             font-family: var(--font-primary);
+             font-size: 1em;
+             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+             outline: none;
+             transition: border-color 0.3s, box-shadow 0.3s;
+             box-sizing: border-box; /* CLAVE para que no se salga del 100% */
+        }
+        /* Ajuste para inputs en la sección de PAGO y PERFIL */
+        .form-game-group input[type="date"] {
+            color-scheme: dark; 
+        }
+        /* Ajuste para placeholders */
+        .profile-form-container input::placeholder,
+        #team-setup input::placeholder {
+             color: rgba(0, 255, 200, 0.4); 
+             opacity: 1;
+        }
+
+        #voucher-form-container input[type="text"]:focus,
+        .profile-form-container input[type="text"]:focus,
+        .profile-form-container input[type="email"]:focus,
+        .profile-form-container input[type="date"]:focus {
+            border-color: var(--color-accent); 
+            box-shadow: 0 0 8px rgba(0, 255, 200, 0.5); 
+        }
+        
+        /* Botón Subir Imagen del Voucher - Estilo de botón */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-accent);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 0.9em;
+        }
+        .form-group .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: block; 
+            width: 100%;
+            border-radius: 4px;
+        }
+        .form-group .file-upload-wrapper::before {
+            content: 'SUBIR IMAGEN DEL COMPROBANTE'; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+            color: var(--color-accent);
+            padding: 12px 15px; 
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid var(--color-highlight);
+            border-radius: 4px;
+            transition: all 0.2s;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 1.5;
+            z-index: 5;
+            box-sizing: border-box;
+            font-family: var(--font-display);
+            font-size: 1em;
+        }
+        .form-group input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 15;
+        }
+        .form-group .file-name {
+            display: block;
+            margin-top: 10px;
+            color: #888;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* Botón Finalizar Inscripción y Enviar */
+        .form-group button[type="submit"], .btn-save-profile {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            /* Diseño Geométrico */
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            font-family: var(--font-display);
+            margin-top: 20px;
+        }
+
+        /* --- Estilos de Rankings (Específicos) --- */
+        #ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            border: 2px solid var(--color-highlight);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 40px;
+            /* Diseño Geométrico */
+            clip-path: polygon(0 5%, 100% 0, 100% 95%, 0% 100%);
+        }
+
+        #ranking-table thead th {
+            background-color: #2c2c2c;
+            color: var(--color-accent);
+            padding: 15px;
+            text-align: left;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 1em;
+            border-bottom: 1px solid var(--color-highlight);
+        }
+
+        #ranking-table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+            color: var(--color-text);
+        }
+
+        #ranking-table tbody tr:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        #ranking-table .rank-position, #ranking-table .rank-value {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* --- MODALES DE AUTENTICACIÓN --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .auth-modal-content {
+            background-color: #1a1a1a;
+            padding: 30px 40px;
+            border: 3px solid var(--color-accent);
+            box-shadow: 0 0 30px var(--color-accent);
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+            position: relative;
+            /* Diseño Geométrico */
+            clip-path: polygon(0 5%, 100% 0, 100% 95%, 0% 100%);
+        }
+        
+        .modal-input-group {
+            margin-bottom: 15px;
+        }
+        .modal-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--color-accent);
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        .modal-input-group input {
+            width: 100%;
+            padding: 10px;
+            background-color: #2c2c2c;
+            border: 1px solid var(--color-highlight);
+            color: white;
+            border-radius: 4px;
+            box-sizing: border-box; /* CLAVE para inputs en modales */
+        }
+        
+        .modal-submit-btn {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-family: var(--font-display);
+             /* Diseño Geométrico */
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--color-accent);
+            cursor: pointer;
+            line-height: 0.5;
+        }
+
+        /* INSTRUCCIONES DE PAGO RE-ESTILIZADAS PARA COHERENCIA VISUAL */
+        .payment-instructions {
+            background-color: #1a1a1a;
+            border-left: 5px solid var(--color-accent);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+            display: none; /* Oculto por defecto */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            line-height: 1.5;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+        .payment-instructions h4 {
+            color: var(--color-accent);
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            font-family: var(--font-display);
+        }
+        .payment-instructions .warning-message {
+            color: #ff6347;
+            font-weight: bold;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 10px;
+        }
+        .payment-instructions .amount-to-pay {
+            color: var(--color-accent);
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* --- NUEVOS ESTILOS: MENÚ DE PERFIL LATERAL (Sidebar) --- */
+        .profile-content-grid {
+            display: flex; /* Usamos flexbox para el layout principal */
+            gap: 40px;
+            padding-top: 40px; 
+            max-width: 1000px; /* Limita el ancho del contenido de la grilla */
+            margin: 0 auto;
+        }
+
+        .profile-sidebar {
+            width: 250px;
+            flex-shrink: 0; /* Evita que el sidebar se encoja */
+            background-color: #1a1a1a;
+            border: 2px solid var(--color-highlight);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 10px 0;
+            height: fit-content; 
+            /* Diseño Geométrico para el sidebar */
+            clip-path: polygon(0 0, 95% 5%, 100% 100%, 5% 95%);
+        }
+
+        .profile-sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .profile-sidebar-nav li a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--color-text);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            border-left: 5px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .profile-sidebar-nav li a:hover {
+            color: white;
+            background-color: var(--color-highlight);
+            border-left-color: var(--color-accent);
+        }
+
+        .profile-sidebar-nav li a.active {
+            color: var(--color-dark);
+            background-color: var(--color-accent);
+            border-left-color: white;
+            font-weight: 700;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-main-content {
+            flex-grow: 1; /* Permite que el contenido principal ocupe el espacio restante */
+            min-width: 0; 
+        }
+
+        .profile-form-container {
+            background-color: #1a1a1a;
+            padding: 40px; /* Se aplica padding para los encabezados y campos */
+            border-radius: 8px;
+            border: 2px solid var(--color-highlight);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+            max-width: none;
+            margin: 0;
+        }
+        
+        /* CORRECCIÓN: Ajuste para el contenido de Mis Torneos (Mis Torneos usa padding: 40px) */
+        #profile-subsection-my-tournaments {
+             padding: 40px; 
+        }
+
+        /* Media Query para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .profile-content-grid {
+                flex-direction: column;
+                gap: 20px;
+                padding-top: 20px;
+            }
+            .profile-sidebar {
+                width: 100%; /* Ocupa todo el ancho en móvil */
+                margin-bottom: 20px;
+            }
+            /* Menú horizontal en móvil */
+            .profile-sidebar-nav ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .profile-sidebar-nav li {
+                flex: 1 1 50%; /* Dos elementos por fila */
+                text-align: center;
+            }
+            .profile-sidebar-nav li a {
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 10px 15px;
+                font-size: 0.8em;
+            }
+            .profile-sidebar-nav li a.active {
+                border-left-color: transparent;
+                border-bottom-color: white;
+            }
+            .details-grid {
+                 grid-template-columns: 1fr; /* Columna única en móvil para detalles del torneo */
+            }
+            .summary-panel {
+                position: static; /* No sticky en móvil */
+            }
+            /* Corrección para tarjetas en móvil */
+            .tournament-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .tournament-card .info-group,
+            .tournament-card .details-group {
+                flex-basis: 100%;
+                width: 100%;
+                min-width: 100%;
+                text-align: left;
+                margin-left: 0;
+                margin-right: 0;
+                margin-bottom: 10px;
+                align-items: flex-start;
+                padding-right: 0;
+            }
+            .tournament-card .details-group p {
+                text-align: left; 
+            }
+            .btn-view-details {
+                flex: 1 1 100%;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Aquí va el contenido principal de la página y la logica de la aplicación -->
+
+    <div id="login-modal" class="modal-overlay" onclick="closeModal('login-modal')">
+        <div class="auth-modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeModal('login-modal')">&times;</span>
+            <h3>INICIAR SESIÓN</h3>
+            <form id="login-form">
+                <div class="modal-input-group">
+                    <label for="login-email">Correo Electrónico:</label>
+                    <input type="email" id="login-email" required placeholder="tu_correo@ejemplo.com">
+                </div>
+                <div class="modal-input-group">
+                    <label for="login-password">Contraseña:</label>
+                    <input type="password" id="login-password" required placeholder="Ingresa tu contraseña">
+                </div>
+                <p style="text-align: right; margin-top: -10px; margin-bottom: 20px;">
+                    <a href="#" onclick="showForgotPassword(event)" style="font-size: 0.9em;">¿Olvidaste tu contraseña?</a>
+                </p>
+                <button type="submit" class="modal-submit-btn">Entrar a la Arena</button>
+            </form>
+        </div>
+    </div>
+
+        <!-- Aquí va el registro de cuenta -->
+
+  
+    <div id="register-modal" class="modal-overlay" onclick="closeModal('register-modal')">
+        <div class="auth-modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeModal('register-modal')">&times;</span>
+            <h3>REGISTRAR CUENTA</h3>
+            <form id="register-form">
+                <div class="modal-input-group">
+                    <label for="register-username">Nombre de Usuario (GamerTag):</label>
+                    <input type="text" id="register-username" required placeholder="Ej: ShadowWarrior_X">
+                </div>
+                <div class="modal-input-group">
+                    <label for="register-email">Correo Electrónico:</label>
+                    <input type="email" id="register-email" required placeholder="tu_correo@ejemplo.com">
+                </div>
+                
+
+                  
+                 <div class="modal-input-group">
+                    <label for="register-edad">Edad:</label>
+                    <input type="number" id="register-edad" required placeholder="Ingresa tu edad">
+                 </div>
+             
+                 
+
+
+                <div class="modal-input-group">
+                    <label for="register-password">Contraseña:</label>
+                    <input type="password" id="register-password" required placeholder="Mínimo 8 caracteres">
+                </div>
+                <div class="modal-input-group">
+                    <label for="register-confirm-password">Confirmar Contraseña:</label>
+                    <input type="password" id="register-confirm-password" required placeholder="Repite tu contraseña">
+                </div>
+                <button type="submit" class="modal-submit-btn">Crear Cuenta</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="forgot-password-modal" class="modal-overlay" onclick="closeModal('forgot-password-modal')">
+        <div class="auth-modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeModal('forgot-password-modal')">&times;</span>
+            <h3>RECUPERAR CONTRASEÑA</h3>
+            <p style="color: #aaa; text-align: center; margin-bottom: 25px; font-size: 0.95em; line-height: 1.4;">Ingresa tu correo electrónico para enviarte un enlace de restablecimiento.</p>
+            <form id="forgot-password-form">
+                <div class="modal-input-group">
+                    <label for="recovery-email">Correo Electrónico:</label>
+                    <input type="email" id="recovery-email" required placeholder="tu_correo@ejemplo.com">
+                </div>
+                <button type="submit" class="modal-submit-btn">ENVIAR ENLACE DE RECUPERACIÓN</button>
+                <p style="text-align: center; margin-top: 15px; font-size: 0.9em; margin-bottom: 0;">
+                    <a href="#" onclick="event.preventDefault(); closeModal('forgot-password-modal'); showModal('login-modal');" style="color: var(--color-text); transition: color 0.3s;">&larr; Volver a Iniciar Sesión</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+
+    <header id="main-header">
+        <div class="header-container">
+            
+            <div class="header-left">
+                
+                <div id="profile-module" style="display: none;">
+                    <div id="profile-icon" onclick="showUserProfile(event)">JD</div> 
+                    <div class="profile-dropdown">
+                        <a href="#" onclick="showUserProfile(event)">Configurar Perfil (<span id="profile-username-display">JDoe</span>)</a> 
+                        <a href="#" onclick="showProfileSubSection(event, 'my-tournaments'); showSection(null, 'user-profile'); closeModal('register-modal');">Mis Torneos</a>
+                        <div class="profile-dropdown-separator"></div>
+                        <a href="#" onclick="logout(event)">Cerrar Sesión</a>
+                    </div>
+                </div>
+                
+                <a href="#home" class="logo" onclick="showSection(null, 'home')">
+                    <h1>PlayMatch</h1>
+                </a>
+            </div>
+            
+            <nav id="main-nav">
+                <ul>
+                    <li class="nav-item has-submenu">
+                        <a href="#mode-selector" class="nav-link" onclick="showSection(event, 'mode-selector')">Torneos</a>
+                        <ul class="submenu">
+                            <li><a href="#torneos-selection" class="submenu-link" onclick="setTournamentMode(event, 'solos', true)">Solos (Individual)</a></li>
+                            <li><a href="#torneos-selection" class="submenu-link" onclick="setTournamentMode(event, 'equipos', true)">Equipos</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item has-submenu">
+                        <a href="#ranking-mode-selector" class="nav-link" onclick="showSection(event, 'ranking-mode-selector')">Rankings</a>
+                        <ul class="submenu">
+                            <li><a href="#rankings" class="submenu-link" onclick="setRankingMode(event, 'solos', true)">Solos</a></li>
+                            <li><a href="#rankings" class="submenu-link" onclick="setRankingMode(event, 'equipos', true)">Equipos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="auth-actions" id="auth-buttons-container">
+                <a href="#" class="btn btn-login" id="login-btn" onclick="showModal('login-modal')">Iniciar Sesión</a>
+                <a href="#" class="btn btn-register" id="register-btn" onclick="showModal('register-modal')">Registrarse</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        
+        <section id="home" class="content-section active">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h2>PLAYMATCH: ¡LA ARENA MÓVIL!</h2>
+                    <p>Domina en Call of Duty, Mobile Legends y Wild Rift. Tu lugar para competir en el más alto nivel de esports móviles.</p>
+                </div>
+                <a href="#mode-selector" class="btn btn-primary btn-cta" onclick="showSection(event, 'mode-selector')">¡ÚNETE A LA ACCIÓN!</a>
+            </div>
+
+            <section class="featured-games">
+                <h3>Torneos Destacados por Juego</h3>
+                <div class="game-cards-container">
+                    
+                    <article class="game-card">
+                        <h4>Call of Duty Mobile</h4>
+                        <p>Torneos activos: 15</p>
+                        <a href="#game-mode-selector" class="btn btn-small" onclick="prepareGameModeSelection(event, 'Call of Duty Mobile')">Ver Torneos</a>
+                    </article>
+
+                    <article class="game-card">
+                        <h4>Mobile Legends</h4>
+                        <p>Torneos activos: 12</p>
+                        <a href="#game-mode-selector" class="btn btn-small" onclick="prepareGameModeSelection(event, 'Mobile Legends')">Ver Torneos</a>
+                    </article>
+                    
+                    <article class="game-card">
+                        <h4>Wild Rift</h4>
+                        <p>Torneos activos: 8</p>
+                        <a href="#game-mode-selector" class="btn btn-small" onclick="prepareGameModeSelection(event, 'Wild Rift')">Ver Torneos</a>
+                    </article>
+                    
+                </div>
+            </section>
+        </section>
+       
+
+                 
+        
+        <section id="mode-selector" class="content-section">
+            <section class="page-title-header">
+                <h2>Torneos</h2>
+                <p>¿Prefieres competir por tu cuenta o formar un equipo ganador?</p>
+            </section>
+            
+            <div class="mode-selection-container">
+                <a href="#torneos-selection" class="mode-button" onclick="setTournamentMode(event, 'solos', true)">
+                    SOLOS (INDIVIDUAL)
+                </a>
+                <a href="#torneos-selection" class="mode-button" onclick="setTournamentMode(event, 'equipos', true)">
+                    EQUIPOS
+                </a>
+            </div>
+        </section>
+
+        <section id="game-mode-selector" class="content-section">
+            <section class="page-title-header">
+                <h2>Torneos de <span id="game-mode-selector-title" class="accent-text">Juego Seleccionado</span></h2>
+                <p>Selecciona el modo de competición para este juego.</p>
+            </section>
+            
+            <div class="mode-selection-container">
+                <a href="#torneos-selection" class="mode-button" id="game-mode-button-solos">
+                    SOLOS (INDIVIDUAL)
+                </a>
+                <a href="#torneos-selection" class="mode-button" id="game-mode-button-equipos">
+                    EQUIPOS
+                </a>
+            </div>
+        </section>
+
+        <section id="torneos-selection" class="content-section">
+            <section class="page-title-header">
+                <h2>Torneos <span id="tournament-mode-display" class="accent-text">EQUIPOS</span></h2>
+                <p>Selecciona un juego para ver los torneos disponibles en modo <span id="mode-subtitle">Equipos</span>.</p>
+            </section>
+
+            <div id="selection-panel" class="selection-panel">
+                <div class="game-cards-container" id="game-selection-list">
+                    
+                    <article class="game-card game-selectable" data-game-id="codmobile" data-modes="solos,equipos" onclick="selectGame('Call of Duty Mobile')">
+                        <h4>Call of Duty Mobile</h4>
+                        <a href="#" class="btn btn-small">Seleccionar</a>
+                    </article>
+                    
+                    <article class="game-card game-selectable" data-game-id="mobilelegends" data-modes="equipos" onclick="selectGame('Mobile Legends')">
+                        <h4>Mobile Legends</h4>
+                        <a href="#" class="btn btn-small">Seleccionar</a>
+                    </article>
+
+                    <article class="game-card game-selectable" data-game-id="wildrift" data-modes="equipos" onclick="selectGame('Wild Rift')">
+                        <h4>Wild Rift</h4>
+                        <a href="#" class="btn btn-small">Seleccionar</a>
+                    </article>
+                </div>
+            </div>
+
+            <div id="list-panel" class="list-panel" style="display: none;">
+                <h3 style="margin-bottom: 5px;">Torneos Activos de <span id="selected-game-name">Juego Seleccionado</span></h3>
+                
+                <div class="tournament-filters">
+                    <button class="filter-btn active" data-filter="all" onclick="filterTournaments('all', this)">Todos</button>
+                    <button class="filter-btn" data-filter="inscrito" onclick="filterTournaments('inscrito', this)">Inscritos</button>
+                    <button class="filter-btn" data-filter="no-inscrito" onclick="filterTournaments('no-inscrito', this)">No Inscritos</button>
+                </div>
+                
+                <div class="tournament-cards-container" id="tournaments-results">
+                    <p style="text-align: center; color: #999;">Cargando torneos...</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="tournament-details" class="content-section">
+            <div class="tournament-detail-container"> 
+                <div class="tournament-header">
+                    <h2 id="detail-name">Nombre del Torneo</h2>
+                    <p class="tournament-meta" id="detail-meta">Juego - Modo</p>
+                </div>
+
+                <div class="details-grid">
+                    <div class="summary-panel">
+                        <h3>RESUMEN RÁPIDO</h3>
+                        <div class="summary-item"><span class="summary-label">Fecha y Hora</span><span class="summary-value" id="detail-date">--/-- @ 00:00</span></div>
+                        <div class="summary-item"><span class="summary-label">Costo de Inscripción</span><span class="summary-value" id="detail-cost">--</span></div>
+                        <div class="summary-item"><span class="summary-label">Tamaño del equipo</span><span class="summary-value" id="detail-team-size">--</span></div>
+                        <div class="summary-item"><span class="summary-label">Jugadores inscritos</span><span class="summary-value" id="detail-participants">0 / 64</span></div>
+                        
+                        <a href="#inscription-payment" class="btn btn-register-large" id="detail-cta" onclick="prepareInscription(event)">INSCRIBIRSE AHORA</a>
+                    </div>
+
+                    <div class="details-panel">
+                        <h3>DESCRIPCIÓN</h3>
+                        <p id="detail-description">Cargando descripción detallada...</p>
+                        
+                        <h3>REGLAS DEL TORNEO</h3>
+                        <ul class="rules-list" id="detail-rules"></ul>
+
+                        <h3>PREMIOS</h3>
+                        <ul class="prizes-list" id="detail-prizes"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team-setup" class="content-section">
+            <section class="page-title-header">
+                <h2>CONFIGURACIÓN DE EQUIPO</h2>
+                <p>Torneo: <span id="team-setup-tournament-name" class="accent-text"></span> | Tamaño: <span id="team-setup-team-size" class="accent-text"></span></p>
+                <p style="color: #ff6347; font-weight: bold; margin-top: 15px;">**Todos los campos y Game IDs son obligatorios para proceder al pago.**</p>
+            </section>
+
+            <div class="profile-form-container" style="max-width: 900px; margin: 0 auto;">
+                <form onsubmit="submitTeamSetup(event)">
+                    <h3>Información General del Equipo</h3>
+                    
+                    <div class="form-game-group">
+                        <label for="team-name">Nombre del Equipo</label>
+                        <input type="text" id="team-name" required placeholder="Ej: Elite Squad X">
+                    </div>
+
+                    <h3 style="margin-top: 40px;">Jugadores y Game IDs (<span id="player-count-display"></span>)</h3>
+                    
+                    <div id="players-fields-container">
+                        </div>
+
+                    <button type="submit" class="btn-save-profile" id="btn-team-submit">
+                        PASAR AL PAGO Y VERIFICACIÓN
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="inscription-payment" class="content-section">
+            <section class="page-title-header">
+                <h2>PAGO DE INSCRIPCIÓN</h2> 
+                <p>Torneo: <span id="payment-tournament-name" class="accent-text"></span> - Costo: <span id="payment-cost" class="accent-text"></span></p>
+            </section>
+
+            <div class="payment-info-box">
+                <h3>1. Selecciona y Realiza tu Pago</h3>
+                <p style="text-align: center; color: #aaa; margin-bottom: 30px;">Selecciona el método de tu preferencia y realiza la transferencia o depósito. El **comprobante es obligatorio** para todos los métodos.</p>
+
+                <div class="payment-options-row">
+                    
+                    <div class="payment-card" id="mp-card" data-method="mercadopago" onclick="selectPaymentMethod('mercadopago', this)">
+                        <span class="payment-logo" style="color: var(--color-mercadopago);">MP</span>
+                        <p>Mercado Pago (Depósito/Transferencia)</p>
+                    </div>
+
+                    <div class="payment-card" id="oxxo-card" data-method="oxxo" onclick="selectPaymentMethod('oxxo', this)">
+                        <span class="payment-logo" style="color: var(--color-oxxo);">OXXO</span>
+                        <p>Depósito en Tienda (Genera Código)</p>
+                    </div>
+                    
+                    <div class="payment-card" id="paypal-card" data-method="paypal" onclick="selectPaymentMethod('paypal', this)">
+                        <span class="payment-logo" style="color: var(--color-paypal);">PP</span>
+                        <p>PayPal (Transferencia / Enviar Dinero)</p>
+                    </div>
+
+                    <div class="payment-card" id="bank-card" data-method="transferencia" onclick="selectPaymentMethod('transferencia', this)">
+                        <span class="payment-logo" style="color: var(--color-transferencia);">CLABE</span>
+                        <p>Transferencia Bancaria Directa</p>
+                    </div>
+                </div>
+
+                <div id="payment-instructions-container">
+                    <div id="payment-instructions-mercadopago" class="payment-instructions">
+                        <h4>Instrucciones para Pago: MERCADO PAGO</h4>
+                        <p><strong>ID de Transacción:</strong> 123456 (Usado en el depósito/transferencia)</p>
+                        <p><strong>Beneficiario MP:</strong> PlayMatch (Correo: mp@playmatch.com)</p>
+                        <span class="warning-message">** Aviso: Este método NO es pago con tarjeta instantáneo. Debe subir el comprobante.</span>
+                        <span class="amount-to-pay">Monto a Pagar: <span class="costo-torneo" id="mp-cost-display"></span></span>
+                    </div>
+
+                    <div id="payment-instructions-oxxo" class="payment-instructions">
+                        <h4>Instrucciones para Pago: OXXO</h4>
+                        <p><strong>Código de Barras:</strong> 779912345678 (Presenta este código en caja)</p>
+                        <p>Acude a cualquier tienda OXXO para realizar el pago.</p>
+                        <span class="warning-message">** La validación puede tardar hasta 24 horas. Debe subir el comprobante.</span>
+                        <span class="amount-to-pay">Monto a Pagar: <span class="costo-torneo" id="oxxo-cost-display"></span></span>
+                    </div>
+
+                    <div id="payment-instructions-paypal" class="payment-instructions">
+                        <h4>Instrucciones para Pago: PAYPAL</h4>
+                        <p>Realiza la transferencia de dinero a la cuenta PayPal de PlayMatch.</p>
+                        <p><strong>Cuenta de Envío:</strong> <span class="accent-text">paypal@playmatch.com</span></p>
+                        <p>Elige "Enviar a un amigo" para evitar comisiones adicionales (si aplica).</p>
+                        <span class="warning-message">** Es indispensable subir el comprobante de la transacción.</span>
+                        <span class="amount-to-pay">Monto a Pagar: <span class="costo-torneo" id="paypal-cost-display"></span></span>
+                    </div>
+
+                    <div id="payment-instructions-transferencia" class="payment-instructions">
+                        <h4>Instrucciones para Pago: TRANSFERENCIA BANCARIA DIRECTA (CLABE)</h4>
+                        <p>Realiza una transferencia interbancaria (SPEI) utilizando los siguientes datos:</p>
+                        <p><strong>Banco:</strong> BBVA | <strong>Clabe:</strong> 012180001234567890</p>
+                        <p><strong>Beneficiario:</strong> PlayMatch eSports S.A. de C.V.</p>
+                        <span class="warning-message">** La validación puede tardar hasta 48 horas hábiles. Debe subir el comprobante.</span>
+                        <span class="amount-to-pay">Monto a Pagar: <span class="costo-torneo" id="bank-cost-display"></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="voucher-form-container" style="display: none;">
+                <form id="voucher-form" onsubmit="submitVoucher(event)">
+                    <h3>2. Subir Comprobante (Voucher)</h3>
+                    <p style="color: #999; text-align: center;">Una vez realizado el pago, sube la imagen de tu comprobante. Tu inscripción será confirmada al validar el pago.</p>
+
+                    <div class="form-group">
+                        <label for="transaction-name">Nombre de quien realizó el pago:</label>
+                        <input type="text" id="transaction-name" required placeholder="Tu Nombre Completo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="voucher-file">Comprobante de Pago (Voucher):</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="voucher-file" accept="image/*" required>
+                            <span class="file-name" id="file-name-display">Ningún archivo seleccionado</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit">Finalizar Inscripción y Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="user-profile" class="content-section">
+            <section class="page-title-header">
+                <h2>Configuración de Perfil</h2>
+                <p>Actualiza tus datos de contacto y tus IDs de juego para inscribirte a torneos.</p>
+            </section>
+            
+            <div class="profile-content-grid">
+                
+                <aside class="profile-sidebar">
+                    <nav class="profile-sidebar-nav">
+                        <ul>
+                            <li><a href="#" id="nav-profilesettings" class="active" onclick="showProfileSubSection(event, 'settings')">Configuración General</a></li>
+                            <li><a href="#" id="nav-gameids" onclick="showProfileSubSection(event, 'game-ids')">Game IDs</a></li>
+                            <li><a href="#" id="nav-mytournaments" onclick="showProfileSubSection(event, 'my-tournaments')">Mis Torneos</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <div class="profile-main-content">
+
+                    <div id="profile-subsection-settings" class="profile-form-container">
+                        <form onsubmit="saveProfile(event)">
+                            <h3>Datos Generales</h3>
+                            <div class="form-game-group">
+                                <label for="profile-username">GamerTag / Nombre de Usuario</label>
+                                <input type="text" id="profile-username" required placeholder="Tu nombre de jugador">
+                            </div>
+                            
+                            <div class="form-game-group">
+                                <label for="profile-dob">Fecha de Nacimiento</label>
+                                <input type="date" id="profile-dob" required>
+                            </div>
+                            
+                            <div class="form-game-group">
+                                <label for="profile-email">Correo Electrónico</label>
+                                <input type="email" id="profile-email" placeholder="Necesita confirmación si se cambia">
+                            </div>
+
+                            <button type="submit" class="btn-save-profile">Guardar Cambios</button>
+                        </form>
+                    </div>
+
+                    <div id="profile-subsection-game-ids" class="profile-form-container" style="display: none;">
+                        <form onsubmit="saveGameIDs(event)">
+                            <h3>Game IDs (Identificadores de Juego)</h3>
+                            <p style="color: #aaa; font-size: 0.9em; margin-bottom: 20px;">Necesitamos tus IDs de juego correctas para invitarte a las partidas.</p>
+
+                            <div class="form-game-group">
+                                <label for="profile-cod-ids">Call of Duty Mobile ID</label>
+                                <input type="text" id="profile-cod-ids" placeholder="Ej: 645319808 (Tu UID)">
+                            </div>
+                            
+                            <div class="form-game-group">
+                                <label for="profile-ml-ids">Mobile Legends ID</label>
+                                <input type="text" id="profile-ml-ids" placeholder="Ej: 99087 (ID) + (Zona ID)">
+                            </div>
+                            
+                            <div class="form-game-group">
+                                <label for="profile-wr-ids">Wild Rift ID</label>
+                                <input type="text" id="profile-wr-ids" placeholder="Ej: GamerTag#1234 (Nombre + Etiqueta)">
+                            </div>
+
+                            <button type="submit" class="btn-save-profile">Guardar IDs de Juego</button>
+                        </form>
+                    </div>
+                    
+                    <div id="profile-subsection-my-tournaments" class="profile-form-container" style="display: none;">
+                        <h3>MIS TORNEOS INSCRITOS</h3>
+                        <p style="color: #ccc; margin-bottom: 25px; text-align: center;">Aquí verás el estado de tus inscripciones, horarios y próximos matches.</p>
+                        <div class="tournament-cards-container" id="my-tournaments-list">
+                            <p style="color: var(--color-accent);">Cargando tus torneos...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <section id="ranking-mode-selector" class="content-section">
+            <section class="page-title-header">
+                <h2>Rankings</h2>
+                <p>Visualiza las clasificaciones de jugadores o equipos en los juegos móviles.</p>
+            </section>
+            
+            <div class="mode-selection-container">
+                <a href="#rankings" class="mode-button" onclick="setRankingMode(event, 'solos', true)">
+                    SOLOS
+                </a>
+                <a href="#rankings" class="mode-button" onclick="setRankingMode(event, 'equipos', true)">
+                    EQUIPOS
+                </a>
+            </div>
+        </section>
+        
+        <section id="rankings" class="content-section">
+            <section class="page-title-header">
+                <h2>Rankings <span id="ranking-mode-display" class="accent-text">EQUIPOS</span></h2>
+                <p>Clasificaciones de jugadores por juego y métricas.</p>
+            </section>
+            
+            <div id="ranking-selection-panel">
+                <h3>Clasificaciones Disponibles</h3>
+                <div class="game-cards-container" id="ranking-game-list">
+                    <article class="game-card game-selectable" data-game-id="codmobile" data-modes="solos,equipos" onclick="selectRankingGame('Call of Duty Mobile')">
+                        <h4>Call of Duty Mobile</h4>
+                        <a href="#" class="btn btn-small">Ver Clasificación</a>
+                    </article>
+                    
+                    <article class="game-card game-selectable" data-game-id="mobilelegends" data-modes="equipos" onclick="selectRankingGame('Mobile Legends')">
+                        <h4>Mobile Legends</h4>
+                        <a href="#" class="btn btn-small">Ver Clasificación</a>
+                    </article>
+                    
+                    <article class="game-card game-selectable" data-game-id="wildrift" data-modes="equipos" onclick="selectRankingGame('Wild Rift')">
+                        <h4>Wild Rift</h4>
+                        <a href="#" class="btn btn-small">Ver Clasificación</a>
+                    </article>
+                </div>
+            </div>
+
+            <div id="ranking-results" style="display: none;">
+                <h3 id="ranking-title">Clasificación de Equipos: Juego Seleccionado</h3>
+                
+                <div id="ranking-table-container">
+                    </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Variable global para mantener el juego seleccionado entre vistas
+        let currentSelectedGame = null;
+
+        // MOCK DATA (Simulando la respuesta de tu Backend JS)
+        const MOCK_TOURNAMENTS = [
+            { id: 1, name: "Clash de Medianoche", game: "Mobile Legends", mode: "Equipos", date: "20/12/2025 @ 18:00 HRS", cost: "$5 USD", status: "no-inscrito", teamSize: "5v5", participants: "32", maxParticipants: "64",
+                rules: ["Se requiere ser nivel 30.", "Prohibido el uso de cuentas prestadas.", "El equipo debe estar presente 15 minutos antes."],
+                description: "¡El torneo más esperado de la noche! Compite por el premio en efectivo y la gloria en este evento de Mobile Legends.",
+                prizes: ["1er Lugar: $500 USD", "2do Lugar: $200 USD", "3er Lugar: 1000 Diamantes"]
+            },
+            { id: 2, name: "Copa Wild Rift", game: "Wild Rift", mode: "Equipos", date: "15/11/2025 @ 20:00 HRS", cost: "GRATIS", status: "inscrito", teamSize: "5v5", participants: "40", maxParticipants: "128",
+                rules: ["Solo jugadores de América Latina.", "Todos los participantes deben tener un buen comportamiento."],
+                description: "Un torneo gratuito para la comunidad, perfecto para probar tu equipo contra nuevos oponentes.",
+                prizes: ["1er Lugar: Skins épicas", "2do Lugar: 500 Wild Cores"]
+            },
+            { id: 3, name: "Dominio Solitario CoD", game: "Call of Duty Mobile", mode: "Solos", date: "01/12/2025 @ 16:00 HRS", cost: "$10 USD", status: "no-inscrito", teamSize: "1v1", participants: "10", maxParticipants: "32",
+                rules: ["Modo: Duelo por equipos.", "Solo dispositivos móviles.", "Prohibido el uso de triggers externos."],
+                description: "Demuestra que eres el mejor jugador individual de CoD Mobile en este torneo rápido y lleno de acción.",
+                prizes: ["1er Lugar: $150 USD", "2do Lugar: 500 CP"]
+            },
+            { id: 4, name: "Batalla Real Urbana", game: "Call of Duty Mobile", mode: "Equipos", date: "05/01/2026 @ 19:00 HRS", cost: "$8 USD", status: "no-inscrito", teamSize: "4v4", participants: "25", maxParticipants: "64",
+                rules: ["Mapa: Nuketown.", "Solo armas subfusil.", "Comunicación por voz obligatoria."],
+                description: "Un torneo intenso de 4v4 en los mapas más icónicos. ¡Coordínate con tu equipo para dominar!",
+                prizes: ["1er Lugar: $300 USD por equipo", "2do Lugar: 800 CP por jugador"]
+            }
+        ];
+
+        const MOCK_RANKINGS = {
+            'equipos-mobilelegends': [
+                { id: 1, name: 'Escuadra Alpha', kills: 580, wins: 45, score: 15200 },
+                { id: 2, name: 'Team Nexus', kills: 450, wins: 38, score: 12100 },
+            ],
+            'solos-callofdutymobile': [
+                { id: 1, name: 'ShadowKills', kills: 890, wins: 20, score: 9999 },
+                { id: 2, name: 'LoneWolf', kills: 750, wins: 15, score: 8500 },
+            ],
+            'equipos-callofdutymobile': [
+                { id: 1, name: 'The Dominators', kills: 1200, wins: 60, score: 25000 },
+                { id: 2, name: 'Elite Squad', kills: 900, wins: 50, score: 20000 },
+            ],
+        };
+
+        let currentTournamentDetails = null;
+        let MOCK_USER_DATA = {
+            username: 'JDoe',
+            email: 'test@playmatch.com',
+            email_pending_confirmation: null, 
+            date_of_birth: '1995-08-20', 
+            game_ids: {
+                codmobile: '', 
+                mobilelegends: '', 
+                wildrift: '' 
+            }
+        };
+
+        let selectedPaymentMethod = null; 
+
+        // Función para cambiar la sección principal visible (Se mantiene)
+        function showSection(event, targetId) {
+            if(event) {
+                event.preventDefault(); 
+            }
+            
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo(0, 0); 
+            }
+        }
+        
+        // Establece el modo de Torneo (solos/equipos) y actualiza los displays.
+        function setTournamentMode(event, mode, activateView = false) {
+            if(event) event.preventDefault();
+            
+            const modeKey = mode.toLowerCase(); 
+            const modeDisplay = (modeKey === 'solos') ? 'SOLOS (INDIVIDUAL)' : 'EQUIPOS';
+            
+            document.getElementById('tournament-mode-display').textContent = modeDisplay;
+            document.getElementById('mode-subtitle').textContent = modeDisplay;
+
+            if (activateView) {
+                showSection(null, 'torneos-selection'); 
+                document.getElementById('selection-panel').style.display = 'block';
+                document.getElementById('list-panel').style.display = 'none';
+            }
+        }
+
+        // NUEVA FUNCIÓN: Prepara la vista de selección de modo para un juego específico
+        function prepareGameModeSelection(event, gameName) {
+            if (event) event.preventDefault();
+            
+            currentSelectedGame = gameName; 
+
+            document.getElementById('game-mode-selector-title').textContent = gameName;
+
+            const soloButton = document.getElementById('game-mode-button-solos');
+            soloButton.onclick = function(e) {
+                setTournamentMode(e, 'solos');
+                selectGame(gameName); 
+            };
+            
+            const teamButton = document.getElementById('game-mode-button-equipos');
+            teamButton.onclick = function(e) {
+                setTournamentMode(e, 'equipos');
+                selectGame(gameName); 
+            };
+
+            showSection(null, 'game-mode-selector');
+        }
+
+
+        // Simula la selección de un juego para TORNEOS
+        async function selectGame(gameName) {
+            const gameId = gameName.toLowerCase().replace(/\s/g, ''); 
+            const currentMode = document.getElementById('mode-subtitle').textContent.toLowerCase().includes('solos') ? 'solos' : 'equipos';
+            
+            document.getElementById('selected-game-name').textContent = gameName; 
+            
+            const selectionPanel = document.getElementById('selection-panel');
+            if (selectionPanel) selectionPanel.style.display = 'none';
+            
+            const listPanel = document.getElementById('list-panel');
+            if (listPanel) listPanel.style.display = 'block';
+
+            const tournamentsContainer = document.getElementById('tournaments-results');
+            document.querySelectorAll('#list-panel .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('#list-panel .filter-btn[data-filter="all"]').classList.add('active');
+
+
+            tournamentsContainer.innerHTML = '<p style="text-align: center; color: var(--color-accent);">Cargando torneos desde la API JS...</p>';
+            
+            await new Promise(resolve => setTimeout(resolve, 800)); 
+            
+            const filteredTournaments = MOCK_TOURNAMENTS.filter(t => 
+                t.game.toLowerCase().replace(/\s/g, '') === gameId && t.mode.toLowerCase() === currentMode
+            );
+            
+            renderTournaments(filteredTournaments, tournamentsContainer);
+            
+            if (listPanel) window.scrollTo(0, listPanel.offsetTop - 90);
+            
+            showSection(null, 'torneos-selection'); 
+        }
+
+        // FUNCIÓN DE FILTRADO DE TORNEOS (Se mantiene)
+        function filterTournaments(filter, clickedButton) {
+            document.querySelectorAll('#list-panel .filter-btn').forEach(btn => btn.classList.remove('active'));
+            clickedButton.classList.add('active');
+
+            const tournamentCards = document.querySelectorAll('#tournaments-results .tournament-card');
+            tournamentCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                
+                if (filter === 'all' || status === filter) {
+                    card.style.display = 'flex'; 
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+
+        function renderTournaments(tournaments, container) {
+            if (tournaments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">No hay torneos disponibles para esta selección.</p>';
+                return;
+            }
+
+            let html = tournaments.map(t => `
+                <article class="tournament-card" data-status="${t.status}">
+                    <div class="info-group">
+                        <h4>${t.name}</h4>
+                        <p>${t.game} - ${t.mode}</p>
+                    </div>
+                    <div class="details-group">
+                        <p>Fecha/Hora: <span class="highlight-info">${t.date}</span></p>
+                        <p>Costo: <span class="highlight-info">${t.cost}</span></p>
+                    </div>
+                    <a href="#tournament-details" class="btn btn-view-details" onclick="showTournamentDetails(event, ${t.id})">
+                        ${(t.status === 'inscrito') ? 'Ver Mi Estatus' : 'Ver Torneo'}
+                    </a>
+                </article>
+            `).join('');
+
+            container.innerHTML = `<div class="tournament-cards-container">${html}</div>`;
+        }
+
+
+        // Muestra los detalles de un torneo específico (Se mantiene)
+        function showTournamentDetails(event, tournamentId) {
+            if(event) event.preventDefault();
+            
+            const tournament = MOCK_TOURNAMENTS.find(t => t.id === tournamentId);
+
+            if (!tournament) {
+                alert('Error: Torneo no encontrado.');
+                return;
+            }
+            
+            currentTournamentDetails = tournament;
+
+            document.getElementById('detail-name').textContent = tournament.name;
+            document.getElementById('detail-meta').textContent = `${tournament.game} - ${tournament.mode}`;
+            document.getElementById('detail-date').textContent = tournament.date;
+            document.getElementById('detail-cost').textContent = tournament.cost;
+            document.getElementById('detail-team-size').textContent = tournament.teamSize;
+            document.getElementById('detail-participants').textContent = `${tournament.participants} / ${tournament.maxParticipants}`;
+            document.getElementById('detail-description').textContent = tournament.description;
+
+            const rulesList = document.getElementById('detail-rules');
+            rulesList.innerHTML = tournament.rules.map((rule, index) => 
+                `<li><strong>Regla ${index + 1}:</strong> ${rule}</li>`
+            ).join('');
+            
+            const prizesList = document.getElementById('detail-prizes');
+            prizesList.innerHTML = tournament.prizes.map((prize, index) => 
+                `<li><strong>${index + 1}º:</strong> ${prize}</li>`
+            ).join('');
+
+            const ctaButton = document.getElementById('detail-cta');
+            if (tournament.cost.toLowerCase() === 'gratis') {
+                ctaButton.textContent = 'INSCRIBIRSE (GRATIS)';
+                ctaButton.onclick = function(e) { 
+                    e.preventDefault(); 
+                    alert(`Inscripción gratuita a ${tournament.name} completada (Simulación).`);
+                    showSection(null, 'home');
+                };
+                ctaButton.style.backgroundColor = 'var(--color-accent)';
+                ctaButton.style.pointerEvents = 'auto';
+            } else if (tournament.status === 'inscrito') {
+                ctaButton.textContent = 'YA ESTÁS INSCRITO';
+                ctaButton.onclick = null; 
+                ctaButton.style.backgroundColor = '#555';
+                ctaButton.style.pointerEvents = 'none';
+            } else {
+                ctaButton.textContent = 'INSCRIBIRSE AHORA';
+                ctaButton.onclick = prepareInscription; 
+                ctaButton.style.backgroundColor = 'var(--color-accent)';
+                ctaButton.style.pointerEvents = 'auto';
+            }
+
+            showSection(null, 'tournament-details');
+        }
+
+        // MODIFICACIÓN: Chequea si es Equipo para ir a Team Setup
+        function prepareInscription(event) {
+            if (event) event.preventDefault();
+
+            if (!currentTournamentDetails) {
+                alert("Error de inscripción: No se pudo obtener la información del torneo.");
+                return;
+            }
+
+            // 1. CHEQUEO: Si el modo es EQUIPOS, vamos al formulario de configuración.
+            if (currentTournamentDetails.mode.toLowerCase() === 'equipos' && currentTournamentDetails.cost.toLowerCase() !== 'gratis') {
+                renderTeamSetup();
+                showSection(null, 'team-setup');
+                return;
+            }
+            
+            // 2. Si es modo SOLOS o GRATIS, va directo al pago (o a la simulación de pago/inscripción)
+            document.getElementById('payment-tournament-name').textContent = currentTournamentDetails.name;
+            document.getElementById('payment-cost').textContent = currentTournamentDetails.cost;
+            
+            const cost = currentTournamentDetails.cost;
+            document.getElementById('mp-cost-display').textContent = cost;
+            document.getElementById('oxxo-cost-display').textContent = cost;
+            document.getElementById('paypal-cost-display').textContent = cost;
+            document.getElementById('bank-cost-display').textContent = cost;
+            
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.payment-instructions').forEach(instructions => instructions.style.display = 'none');
+            document.getElementById('voucher-form-container').style.display = 'none';
+            selectedPaymentMethod = null;
+
+            showSection(null, 'inscription-payment');
+        }
+
+        // NUEVA FUNCIÓN: Genera los campos del formulario de equipo basados en el tamaño del equipo.
+        function renderTeamSetup() {
+            if (currentTournamentDetails.mode.toLowerCase() !== 'equipos') return;
+            
+            const teamSizeMatch = currentTournamentDetails.teamSize.match(/(\d+)/);
+            const teamSize = teamSizeMatch ? parseInt(teamSizeMatch[0]) : 5; 
+
+            const container = document.getElementById('players-fields-container');
+            const playerDisplay = document.getElementById('player-count-display');
+            const game = currentTournamentDetails.game;
+            
+            // Actualizar encabezados
+            document.getElementById('team-setup-tournament-name').textContent = currentTournamentDetails.name;
+            document.getElementById('team-setup-team-size').textContent = currentTournamentDetails.teamSize;
+            playerDisplay.textContent = `${teamSize} Jugadores`;
+
+            let html = '';
+            for (let i = 1; i <= teamSize; i++) {
+                const isCaptain = (i === 1) ? " (Capitán/Tú)" : "";
+                
+                html += `
+                    <h4 style="color: white; margin-top: 25px; border-bottom: 1px dashed var(--color-highlight); padding-bottom: 5px;">Jugador ${i}${isCaptain}</h4>
+                    <div class="form-game-group">
+                        <label for="player-name-${i}">Nombre de Jugador ${i}</label>
+                        <input type="text" id="player-name-${i}" data-index="${i}" required placeholder="GamerTag o Nombre completo">
+                    </div>
+                    <div class="form-game-group">
+                        <label for="player-id-${i}">${game} ID</label>
+                        <input type="text" id="player-id-${i}" data-index="${i}" required placeholder="Tu ID única de ${game}">
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // NUEVA FUNCIÓN: Valida el formulario del equipo y avanza al pago
+        function submitTeamSetup(event) {
+            event.preventDefault();
+            
+            const teamName = document.getElementById('team-name').value;
+            const teamSizeMatch = currentTournamentDetails.teamSize.match(/(\d+)/);
+            const teamSize = teamSizeMatch ? parseInt(teamSizeMatch[0]) : 5;
+            
+            if (!teamName.trim()) {
+                alert("Por favor, ingresa un nombre de equipo.");
+                return;
+            }
+            
+            const teamData = { teamName: teamName, players: [] };
+            let isValid = true;
+
+            for (let i = 1; i <= teamSize; i++) {
+                const nameInput = document.getElementById(`player-name-${i}`);
+                const idInput = document.getElementById(`player-id-${i}`);
+
+                if (!nameInput || !nameInput.value.trim() || !idInput || !idInput.value.trim()) {
+                    isValid = false;
+                    alert(`Faltan datos en el Jugador ${i}. Todos los campos son obligatorios.`);
+                    if (nameInput) nameInput.focus();
+                    break;
+                }
+
+                teamData.players.push({
+                    name: nameInput.value.trim(),
+                    gameId: idInput.value.trim()
+                });
+            }
+
+            if (isValid) {
+                console.log("Datos del equipo configurados:", teamData);
+                alert(`¡Configuración de equipo lista! Redirigiendo al pago de ${teamData.teamName}.`);
+
+                const cost = currentTournamentDetails.cost;
+                document.getElementById('payment-tournament-name').textContent = currentTournamentDetails.name;
+                document.getElementById('payment-cost').textContent = cost;
+                document.getElementById('mp-cost-display').textContent = cost;
+                document.getElementById('oxxo-cost-display').textContent = cost;
+                document.getElementById('paypal-cost-display').textContent = cost;
+                document.getElementById('bank-cost-display').textContent = cost;
+
+                showSection(null, 'inscription-payment');
+            }
+        }
+
+        // Muestra las instrucciones de pago para el método seleccionado (MODIFICADA)
+        function selectPaymentMethod(method, clickedCard) {
+            // 1. Resetear estado
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.payment-instructions').forEach(instructions => instructions.style.display = 'none');
+
+            // 2. Activar la tarjeta clickeada
+            clickedCard.classList.add('active');
+            selectedPaymentMethod = method; // Guardar el método
+
+            // 3. Mostrar las instrucciones específicas
+            document.getElementById(`payment-instructions-${method}`).style.display = 'block';
+            
+            // 4. Mostrar la sección de subir comprobante
+            document.getElementById('voucher-form-container').style.display = 'block';
+
+            // Desplazarse hacia las instrucciones y el formulario
+            window.scrollTo(0, document.getElementById(`payment-instructions-${method}`).offsetTop - 90);
+        }
+
+        function submitVoucher(event) {
+            event.preventDefault();
+            
+            const transactionName = document.getElementById('transaction-name').value;
+            const voucherFile = document.getElementById('voucher-file').files[0];
+
+            if (!selectedPaymentMethod) {
+                alert("Por favor, selecciona un método de pago primero.");
+                return;
+            }
+            
+            if (!voucherFile) {
+                alert("Por favor, sube una imagen del comprobante (voucher).");
+                return;
+            }
+
+            alert(`Voucher de ${transactionName} (Método: ${selectedPaymentMethod.toUpperCase()}) enviado para verificación de ${currentTournamentDetails.name}. Serás notificado por email cuando la inscripción esté confirmada. ¡Gracias!`);
+
+            showSection(null, 'home');
+        }
+
+
+        function setRankingMode(event, mode, activateView = true) {
+            if(event) event.preventDefault();
+            
+            const modeKey = mode.toLowerCase();
+            const modeDisplay = (modeKey === 'solos') ? 'SOLOS' : 'EQUIPOS';
+            document.getElementById('ranking-mode-display').textContent = modeDisplay;
+            
+            const gameCards = document.querySelectorAll('#ranking-game-list .game-card');
+            gameCards.forEach(card => {
+                const supportedModes = card.getAttribute('data-modes').split(',');
+                if (supportedModes.includes(modeKey)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            if (activateView) {
+                showSection(null, 'rankings');
+                document.getElementById('ranking-selection-panel').style.display = 'block';
+                document.getElementById('ranking-results').style.display = 'none';
+            }
+        }
+
+        async function selectRankingGame(gameName) {
+            const currentMode = document.getElementById('ranking-mode-display').textContent.toLowerCase().includes('solos') ? 'solos' : 'equipos';
+            const gameId = gameName.toLowerCase().replace(/\s/g, '');
+            const rankingId = currentMode + '-' + gameId;
+
+            document.getElementById('ranking-title').textContent = `Clasificación de ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)}: ${gameName}`;
+
+            document.getElementById('ranking-selection-panel').style.display = 'none';
+            document.getElementById('ranking-results').style.display = 'block';
+
+            const container = document.getElementById('ranking-table-container');
+            container.innerHTML = '<p style="text-align: center; color: var(--color-accent);">Cargando clasificación...</p>';
+
+            await new Promise(resolve => setTimeout(resolve, 800)); 
+
+            const rankingData = MOCK_RANKINGS[rankingId] || [];
+            renderRankingTable(rankingData, container, currentMode);
+        }
+
+        function renderRankingTable(data, container, mode) {
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Aún no hay datos de clasificación para esta categoría.</p>';
+                return;
+            }
+            
+            const isSolos = mode === 'solos';
+            const playerHeader = isSolos ? 'Jugador' : 'Equipo';
+            const metric1 = isSolos ? 'Muertes' : 'Kills Totales';
+            const metric2 = isSolos ? 'Partidas Ganadas' : 'Partidas Ganadas';
+
+            let tableHTML = `
+                <table id="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>${playerHeader}</th>
+                            <th>${metric1}</th>
+                            <th>${metric2}</th>
+                            <th>Puntos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.sort((a, b) => b.score - a.score).forEach((item, index) => {
+                tableHTML += `
+                    <tr>
+                        <td class="rank-position">${index + 1}</td>
+                        <td class="rank-player"><a href="/perfil/${item.id}">${item.name}</a></td>
+                        <td class="rank-value">${isSolos ? item.kills : item.kills}</td>
+                        <td class="rank-value">${item.wins}</td>
+                        <td class="rank-value">${item.score}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        // --- Lógica de Modales y Perfil ---
+
+        // Función para mostrar cualquier modal
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        // Función para cerrar cualquier modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        // Muestra el modal de recuperación de contraseña
+        function showForgotPassword(event) {
+            if (event) event.preventDefault();
+            closeModal('login-modal');
+            showModal('forgot-password-modal');
+        }
+        
+        // Función para cambiar el estado de la cabecera (Autenticado vs. No Autenticado)
+        function updateHeaderState(isAuthenticated, username = 'Gamer') {
+            const authContainer = document.getElementById('auth-buttons-container');
+            const profileModule = document.getElementById('profile-module');
+            const profileIcon = document.getElementById('profile-icon');
+            
+            if (isAuthenticated) {
+                authContainer.style.display = 'none';
+                profileModule.style.display = 'flex';
+                profileIcon.textContent = username.substring(0, 2).toUpperCase();
+                
+                // Actualizar enlace de perfil
+                document.getElementById('profile-username-display').textContent = username;
+            } else {
+                authContainer.style.display = 'flex';
+                profileModule.style.display = 'none';
+            }
+        }
+
+        // Simula la función de cerrar sesión
+        function logout(event) {
+            if (event) event.preventDefault();
+            updateHeaderState(false);
+            // Cierra el dropdown después de cerrar sesión
+            document.querySelector('.profile-dropdown').classList.remove('active');
+            showSection(null, 'home'); 
+        }
+
+        // --- Lógica de Perfil (Sidebar y Datos) ---
+
+        // Manejo del menú lateral de perfil
+        function showProfileSubSection(event, subSectionId) {
+            if (event) event.preventDefault();
+
+            // 1. Ocultar todos los contenidos de sub-sección
+            document.querySelectorAll('.profile-main-content .profile-form-container').forEach(sub => {
+                sub.style.display = 'none';
+            });
+            
+            // 2. Desactivar todos los enlaces del sidebar
+            document.querySelectorAll('.profile-sidebar-nav li a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 3. Mostrar el contenido de la sub-sección objetivo
+            const targetSubSection = document.getElementById(`profile-subsection-${subSectionId}`);
+            if (targetSubSection) {
+                targetSubSection.style.display = 'block';
+            }
+
+            // 4. Activar el enlace del sidebar
+            const clickedLink = document.getElementById(`nav-${subSectionId.replace(/-/g, '')}`);
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
+
+            // 5. Asegurar que los datos estén cargados si se navega a las secciones principales
+            if (subSectionId === 'settings' || subSectionId === 'game-ids') {
+                loadProfileData(); 
+            }
+            
+            if (subSectionId === 'my-tournaments') {
+                renderMyTournaments(); 
+            }
+        }
+
+        // Carga la información del perfil en los formularios
+        function loadProfileData() {
+            document.getElementById('profile-username').value = MOCK_USER_DATA.username;
+            document.getElementById('profile-email').value = MOCK_USER_DATA.email;
+            
+            const dobInput = document.getElementById('profile-dob');
+            if (dobInput) {
+                dobInput.value = MOCK_USER_DATA.date_of_birth || ''; 
+                
+                // LÓGICA CLAVE: Inmutabilidad de DOB
+                if (MOCK_USER_DATA.date_of_birth && MOCK_USER_DATA.date_of_birth.length > 0) {
+                    dobInput.disabled = true;
+                    dobInput.placeholder = 'Configurada al registrar la cuenta';
+                    dobInput.style.backgroundColor = '#1a1a1a';
+                    dobInput.style.borderColor = '#555';
+                } else {
+                    dobInput.disabled = false;
+                    dobInput.style.backgroundColor = ''; 
+                    dobInput.style.borderColor = '';
+                }
+            } 
+
+            const codInput = document.getElementById('profile-cod-ids');
+            if (codInput) codInput.value = MOCK_USER_DATA.game_ids.codmobile || '';
+            
+            const mlInput = document.getElementById('profile-ml-ids');
+            if (mlInput) mlInput.value = MOCK_USER_DATA.game_ids.mobilelegends || '';
+            
+            const wrInput = document.getElementById('profile-wr-ids');
+            if (wrInput) wrInput.value = MOCK_USER_DATA.game_ids.wildrift || '';
+            
+            const emailField = document.getElementById('profile-email');
+            if (MOCK_USER_DATA.email_pending_confirmation) {
+                emailField.placeholder = MOCK_USER_DATA.email_pending_confirmation + ' (Pendiente de verificar)';
+                emailField.disabled = false;
+                emailField.value = MOCK_USER_DATA.email_pending_confirmation;
+            } else {
+                emailField.disabled = false;
+                emailField.value = MOCK_USER_DATA.email;
+                emailField.placeholder = 'Necesita confirmación si se cambia';
+            }
+        }
+
+        // Muestra la página de perfil (Inicializa la sub-sección)
+        function showUserProfile(event) {
+            if (event) event.preventDefault();
+            
+            loadProfileData();
+            showProfileSubSection(null, 'settings'); 
+            showSection(null, 'user-profile');
+            
+            const dropdown = document.querySelector('#profile-module .profile-dropdown');
+            if(dropdown && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        }
+
+        // Simula el guardado de DATOS GENERALES esto ya se puede implementar PENDIENTE 
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            const newUsername = document.getElementById('profile-username').value;
+            const newEmail = document.getElementById('profile-email').value;
+            const newDOB = document.getElementById('profile-dob').value; 
+            const currentEmail = MOCK_USER_DATA.email;
+
+            MOCK_USER_DATA.username = newUsername;
+            
+            if (!document.getElementById('profile-dob').disabled) {
+                 MOCK_USER_DATA.date_of_birth = newDOB; 
+            }
+
+            if (newEmail !== currentEmail) {
+                MOCK_USER_DATA.email_pending_confirmation = newEmail;
+                alert(`¡Cambio de correo pendiente! Se ha enviado un enlace de verificación a ${newEmail}. Por favor, revisa tu bandeja de entrada.`);
+                logout(); 
+                return;
+            }
+
+            MOCK_USER_DATA.email = newEmail;
+            MOCK_USER_DATA.email_pending_confirmation = null; 
+
+            alert("¡Datos Generales actualizados con éxito! (Simulación)");
+            updateHeaderState(true, MOCK_USER_DATA.username);
+            showSection(null, 'home'); 
+        }
+
+        // Simula el guardado de Game IDs
+        function saveGameIDs(event) {
+            event.preventDefault();
+            
+            MOCK_USER_DATA.game_ids.codmobile = document.getElementById('profile-cod-ids').value;
+            MOCK_USER_DATA.game_ids.mobilelegends = document.getElementById('profile-ml-ids').value;
+            MOCK_USER_DATA.game_ids.wildrift = document.getElementById('profile-wr-ids').value;
+
+            alert("¡Game IDs actualizadas con éxito! (Simulación)");
+            
+            loadProfileData(); 
+        }
+
+        // Renderiza los torneos inscritos
+        function renderMyTournaments() {
+            const container = document.getElementById('my-tournaments-list');
+            const myTournaments = MOCK_TOURNAMENTS.filter(t => t.status === 'inscrito'); 
+            
+            if (myTournaments.length === 0) {
+                container.innerHTML = '<p style="color: #999; margin-top: 20px;">Aún no estás inscrito en ningún torneo activo. ¡Encuentra uno en la sección de Torneos!</p>';
+                return;
+            }
+
+            let html = myTournaments.map(t => `
+                <article class="tournament-card" data-status="${t.status}">
+                    <div class="info-group">
+                        <h4>${t.name}</h4>
+                        <p>${t.game} - ${t.mode}</p>
+                    </div>
+                    <div class="details-group">
+                        <p>Fecha: <span class="highlight-info">${t.date}</span></p>
+                        <p>Estatus: <span class="highlight-info">Inscrito</span></p>
+                    </div>
+                    <a href="#tournament-details" class="btn btn-view-details" onclick="showTournamentDetails(event, ${t.id})">
+                        VER DETALLES
+                    </a>
+                </article>
+            `).join('');
+
+            container.innerHTML = `<div class="tournament-cards-container">${html}</div>`;
+        }
+
+        // --- Lógica de Inicialización ---
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection(null, 'home');
+            setTournamentMode(null, 'equipos', false); 
+            setRankingMode(null, 'equipos', false); 
+        });
+            // Simulación de envío de formulario de Login (Se mantiene)
+            document.getElementById('login-form').onsubmit = function(event) {
+                event.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const username = document.getElementById('login-email').value.split('@')[0];
+                if (email === MOCK_USER_DATA.email || email.length > 5) {
+                    alert(`Simulación: Inicio de sesión exitoso. ¡Bienvenido, ${username}!`);
+                    closeModal('login-modal');
+                    updateHeaderState(true, username);
+                } else {
+                    alert('Simulación: Credenciales incorrectas.');
+                }
+            };
+            
+           // ESTE CODIGO ES REAL DE REGISTRO // 
+    document.getElementById('register-form').onsubmit = async function(event) {
+    event.preventDefault();
+    
+    const username = document.getElementById('register-username').value;
+    const email = document.getElementById('register-email').value;
+    const edad = document.getElementById('register-edad').value;
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+    // --- Validación CLAVE en el Frontend ---
+    if (password !== confirmPassword) {
+        alert('Error: Las contraseñas no coinciden.');
+        return; // Detenemos el envío
+    }
+
+    try {
+        const response = await fetch('/admin/usuarios/register', { // <-- Endpoint de registro
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // Enviamos los 4 datos que la BD necesita
+                username: username, 
+                email: email, 
+                password: password, 
+                edad: edad 
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // ¡Éxito!
+            alert(`¡Registro exitoso! Bienvenido, ${data.username}.`);
+            closeModal('register-modal');
+            
+            // Iniciar sesión automáticamente
+            updateHeaderState(true, data.username);
+        } else {
+            // Error (ej. "El correo ya existe")
+            alert(`Error en el registro: ${data.message}`);
+        }
+
+    } catch (error) {
+        console.error('Error de red:', error);
+        alert('No se pudo conectar al servidor de registro.');
+    }
+};
+               
+               
+               
+               
+               
+               
+                
+     
+            // Simulación de envío del formulario de recuperación (Se mantiene)
+            document.getElementById('forgot-password-form').onsubmit = function(event) {
+                event.preventDefault();
+                const email = document.getElementById('recovery-email').value;
+                
+                alert(`Simulación: Se ha enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`);
+                closeModal('forgot-password-modal');
+                
+                document.getElementById('recovery-email').value = '';
+            };
+
+
+            // Listener para el botón de subir voucher (Se mantiene)
+            document.getElementById('voucher-file').addEventListener('change', function() {
+                const fileNameDisplay = document.getElementById('file-name-display');
+                if (this.files && this.files.length > 0) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                    fileNameDisplay.style.color = 'var(--color-accent)';
+                } else {
+                    fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+                    fileNameDisplay.style.color = '#888';
+                }
+            });
+            
+            // Cierra el dropdown del perfil si se hace click fuera (Se mantiene)
+            document.addEventListener('click', function(event) {
+                const dropdown = document.querySelector('.profile-dropdown');
+                const profileModule = document.getElementById('profile-module');
+                
+                if (dropdown && dropdown.classList.contains('active') && profileModule && !profileModule.contains(event.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+            
+            updateHeaderState(false);
+        
+    </script>
+
+</body>
+</html>

@@ -3,7 +3,8 @@
 import pool from './db.js'; // Importamos la conexión
 
 // Obtener todos los juegos
-export const getAllJuegos = async () => {
+export const getAllJuegos = async () => 
+{
   const [rows] = await pool.query('SELECT * FROM Juego');
   return rows;
 };
